@@ -14,7 +14,7 @@ Open `index.html` in a browser. No dependencies other than Google Fonts.
 
 At the `CONFIG` constant in `index.html`:
 
-- `ENDPOINT` – Google Apps Script `/exec` URL that receives answer logs. Empty = logging off.
+- `ENDPOINT` – Google Apps Script `/exec` URL that receives answer logs and consultant requests. Empty = logging off, so e-mails left on the page go nowhere. Set-up guide and script: [`apps-script/`](apps-script/README.md).
 - `LOG_MODE` – `"all"` logs every step; `"email_only"` logs only when a user leaves an email.
 
 Packages, prices and scoring weights are prototype assumptions (`PK` and `compute()` in `index.html`), not confirmed pricing.

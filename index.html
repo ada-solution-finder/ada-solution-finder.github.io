@@ -183,6 +183,7 @@ details.alc .sub{margin:0}
 .field.other label{font-weight:500;font-size:.9rem;color:var(--muted)}
 .reveal{overflow:hidden}
 .hidden{display:none}
+.hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
 
 /* Done */
 .done{text-align:center;padding:24px 0}
@@ -289,7 +290,7 @@ en:{brandsub:"Solution Finder",learn:"Learn more about us:",toDark:"Switch to da
  emailErr:"Enter a valid email so the consultant can reach you.",consent:"I agree that ADA may contact me about this request and store my answers for that purpose.",
  consentErr:"Tick the box so we can contact you.",finish:"Finish",
  doneH:"All done",doneYesH:"We’ve received your request",
- doneYes:e=>`Thank you for exploring ADA Solution Finder. One of our solution consultants will personally review your answers and reach out to <b>${e}</b> within one business day with a tailored proposal. We look forward to helping your brand grow.`,
+ doneYes:e=>`Thank you for exploring ADA Solution Finder.<br>One of our solution consultants will personally review your answers and reach out to <b>${e}</b> within one business day. We look forward to helping your brand grow.`,
  doneNo:"Thanks for using Solution Finder. You can come back any time to explore your options.",home:"Back to home"},
 };
 const O={ /* options: [id, label, legacy label – unused] */
@@ -331,7 +332,7 @@ const MEDIA_RANGE={"50":[0,50],"200":[50,200],"500":[200,500],"1000":[500,1000]}
 
 /* ---------- State ---------- */
 let lang="en", screen="intro";
-const blank=()=>({cat:null,catOther:"",ch:[],gmv:null,tgt:null,sku:null,svc:[],live:null,liveOther:"",video:null,videoOther:"",media:null,dur:null,durOther:"",bud:null,start:null,confirmed:false,wants:false,email:"",consent:false});
+const blank=()=>({cat:null,catOther:"",ch:[],gmv:null,tgt:null,sku:null,svc:[],live:null,liveOther:"",video:null,videoOther:"",media:null,dur:null,durOther:"",bud:null,start:null,confirmed:false,wants:false,email:"",consent:false,consentTime:""});
 const A=blank();
 const STEP_OF={s1:0,s2:1,confirm:2,results:3,consult:4};
 const $=s=>document.querySelector(s);
@@ -421,17 +422,17 @@ function snapshot(event){
     services:enMany("svc",A.svc),
     livestream:has("live")?(A.live==="other"?A.liveOther:enL("live",A.live)):"",
     videos:has("video")?(A.video==="other"?A.videoOther:enL("video",A.video)):"",
-    media_spend:(has("ads")||has("aff"))?enL("media",A.media):"",
+    media_budget:(has("ads")||has("aff"))?enL("media",A.media):"",
     duration:A.dur==="other"?`${A.durOther} months`:enL("dur",A.dur),
     budget:enL("bud",A.bud),start:enL("start",A.start)};
   if(A.svc.length&&A.gmv!==null&&A.bud!==null){
     const R=compute();
-    Object.assign(d,{solution:R.ids.join(" + "),match:R.score,price_from_m:R.from,price_to_m:R.to,one_off_m:R.oneOff,
+    Object.assign(d,{top_package:R.ids.join(" + "),top_score:R.score,price_from_m:R.from,price_to_m:R.to,one_off_m:R.oneOff,
       all_scores:R.areas.map(x=>x.opts.map(r=>r.o.id+":"+r.pct).join(",")).join("|"),
       within_budget:R.fits?"yes":"no",qualified:(R.fits&&+A.start<=3)?"yes":"no"});
   }
   if(event==="lead"||event==="finish") d.consultant=A.wants?"yes":"no";
-  if(event==="lead"){d.email=A.email;d.consent=A.consent?"yes":"no";}
+  if(event==="lead"){d.email=A.email;d.consent=A.consent?"yes":"no";d.consent_time=A.consentTime;d.website=($("#website")||{}).value||"";}
   return d;
 }
 function log(event){
@@ -559,6 +560,7 @@ function render(){
       <div id="more" class="reveal ${A.wants?"":"hidden"}">
         <div class="field"><label for="email">${t("email")} *</label><input id="email" type="email" inputmode="email" autocomplete="email" required placeholder="${t("emailPh")}" value="${esc(A.email)}"><div class="err" id="e-email"></div></div>
         <label class="check"><input type="checkbox" id="consent" ${A.consent?"checked":""}><span>${t("consent")}</span></label><div class="err" id="e-consent"></div>
+        <div class="hp" aria-hidden="true"><label>Website <input id="website" type="text" tabindex="-1" autocomplete="off"></label></div>
       </div>
       <div class="actions"><button class="btn ghost" data-go="results">${t("back")}</button><button class="btn primary" data-next="consult">${t("finish")}</button></div></section>`;
   }
@@ -600,7 +602,7 @@ function validate(step){
   if(step==="confirm"){A.confirmed=$("#cfok").checked;$("#e-cf").textContent=A.confirmed?"":t("cfErr");return A.confirmed;}
   if(step==="consult"){
     if(!A.wants) return true;
-    A.email=$("#email").value.trim(); A.consent=$("#consent").checked;
+    A.email=$("#email").value.trim(); A.consent=$("#consent").checked; A.consentTime=A.consent?new Date().toISOString():"";
     const okE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(A.email); const okC=A.consent;
     $("#e-email").textContent=okE?"":t("emailErr"); $("#e-consent").textContent=okC?"":t("consentErr");
     if(!okE) $("#email").focus(); return okE&&okC;
