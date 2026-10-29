@@ -38,6 +38,8 @@ html,body{margin:0}
 body{background:var(--page);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.55;min-height:100vh}
 button,input{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--magenta);outline-offset:2px;border-radius:6px}
+/* Headings get focus on screen change for screen readers; no ring needed there */
+[tabindex="-1"]:focus{outline:none}
 
 header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--page);background:color-mix(in srgb,var(--page) 82%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 #bg-dots{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
@@ -86,15 +88,13 @@ p.lead{font-size:1.1rem;color:var(--muted);max-width:56ch;margin:0 0 24px}
 .intro{display:grid;grid-template-columns:1.3fr 1fr;gap:32px;align-items:center}
 .intro-visual{position:relative;aspect-ratio:1/1;max-width:300px;justify-self:center;width:100%}
 .intro-visual svg{width:100%;height:100%}
-.facts{display:flex;gap:22px;margin:22px 0 28px;flex-wrap:wrap;color:var(--muted);font-size:.95rem}
-.facts b{display:block;color:var(--ink);font-size:1.05rem}
-
-/* Understand */
-.needs{display:grid;gap:14px;margin:8px 0 0;padding:0;list-style:none}
-.needs li{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;padding:16px 0;border-bottom:1px solid var(--line)}
-.needs li:last-child{border-bottom:0}
-.needs .ic{width:44px;height:44px;border-radius:12px;background:var(--chip);display:grid;place-items:center;color:var(--violet)}
-.needs b{display:block;color:var(--ink)}
+/* Understand: a plain list with small outlined markers joined by a thin gradient rule */
+.needs{margin:4px 0 0;padding:0;list-style:none}
+.needs li{position:relative;display:grid;grid-template-columns:34px 1fr;gap:16px;align-items:start;padding:10px 0 18px}
+.needs li:not(:last-child)::after{content:"";position:absolute;left:16px;top:50px;bottom:-4px;width:2px;border-radius:2px;background:linear-gradient(var(--violet),var(--magenta));opacity:.3}
+.needs .ic{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;color:var(--violet);background:var(--surface)}
+.needs .ic svg{width:16px;height:16px}
+.needs b{display:block;color:var(--ink);margin-top:5px}
 .needs span{color:var(--muted)}
 
 /* Confirm */
@@ -129,6 +129,16 @@ dl.sum dt{color:var(--muted);padding-right:16px}
 .others .bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden}
 .others .bar i{display:block;height:100%;background:var(--violet);border-radius:8px}
 .others .p{font-weight:700;text-align:right;color:var(--ink)}
+.others li.pick .nm b{color:var(--violet)}
+.others li.off{opacity:.5}
+.others em{font-style:normal;font-weight:600;color:var(--magenta)}
+.incl li b{color:var(--violet);margin-right:2px}
+.oneoff{font-size:.92rem;color:var(--muted);margin-top:6px}
+.notes{list-style:none;padding:0;margin:14px auto 0;max-width:52ch;font-size:.88rem;color:var(--muted)}
+.notes li+li{margin-top:2px}
+h3.areas-h{margin:26px 0 0;color:var(--ink);font-size:1.1rem}
+h3.area{margin:18px 0 0;font-size:.82rem;font-family:var(--font);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+h3.area+.others{margin-top:4px}
 .disc{font-size:.85rem;color:var(--muted);margin-top:18px}
 
 /* Consult */
@@ -136,6 +146,8 @@ dl.sum dt{color:var(--muted);padding-right:16px}
 .field label{display:block;font-weight:600;margin-bottom:6px}
 .field input{width:100%;border:1.5px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px;background:var(--surface)}
 .field input:focus{border-color:var(--violet);outline:none}
+.field.other{margin-top:12px;max-width:320px}
+.field.other label{font-weight:500;font-size:.9rem;color:var(--muted)}
 .reveal{overflow:hidden}
 .hidden{display:none}
 
@@ -177,10 +189,8 @@ footer.site a{color:var(--violet);font-weight:600}
 </head>
 <body>
 <canvas id="bg-dots" aria-hidden="true"></canvas>
-<header class="bar"><div class="bar-in">
-  <div class="brand">
-    <a class="logo" href="https://adaglobal.com/" target="_blank" rel="noopener" id="t-logo" aria-label="ADA Global home page">
-      <svg viewBox="0 0 100 47" fill="none" aria-hidden="true">
+<svg width="0" height="0" style="position:absolute;color:var(--ink)" aria-hidden="true" focusable="false">
+  <symbol id="ada-logo" viewBox="0 0 100 47" fill="none">
         <path d="M15.3839 42.3109C21.7566 42.3109 26.9222 37.1453 26.9222 30.7726C26.9222 24.3999 21.7566 19.2344 15.3839 19.2344C9.01127 19.2344 3.8457 24.3999 3.8457 30.7726C3.8457 37.1453 9.01127 42.3109 15.3839 42.3109Z" stroke="currentColor" stroke-width="7.69231" stroke-miterlimit="10"/>
         <path d="M26.9219 30.7743C26.9219 37.1469 21.7563 42.3125 15.3836 42.3125C12.2537 42.3125 9.41502 41.0665 7.33646 39.0433" stroke="url(#ada-g0)" stroke-width="7.69231" stroke-miterlimit="10" stroke-linecap="round"/>
         <path d="M26.9219 30.7734V42.3108" stroke="currentColor" stroke-width="7.69231" stroke-miterlimit="10" stroke-linecap="round"/>
@@ -196,7 +206,12 @@ footer.site a{color:var(--violet);font-weight:600}
           <linearGradient id="ada-g1" x1="61.5078" y1="24.9957" x2="38.4313" y2="24.1303" gradientUnits="userSpaceOnUse"><stop stop-color="#5A5A5A" style="stop-color:color-mix(in srgb,currentColor 40%,var(--page))"/><stop offset="0.75" stop-color="currentColor"/></linearGradient>
           <linearGradient id="ada-g2" x1="96.123" y1="36.5434" x2="73.0466" y2="37.4087" gradientUnits="userSpaceOnUse"><stop stop-color="#5A5A5A" style="stop-color:color-mix(in srgb,currentColor 40%,var(--page))"/><stop offset="0.75" stop-color="currentColor"/></linearGradient>
         </defs>
-      </svg>
+  </symbol>
+</svg>
+<header class="bar"><div class="bar-in">
+  <div class="brand">
+    <a class="logo" href="https://adaglobal.com/" target="_blank" rel="noopener" id="t-logo" aria-label="ADA Global home page">
+      <svg viewBox="0 0 100 47" aria-hidden="true"><use href="#ada-logo"/></svg>
     </a>
     <span id="t-brandsub">Solution Finder</span><span class="proto">Prototype</span>
   </div>
@@ -209,100 +224,126 @@ footer.site a{color:var(--violet);font-weight:600}
 /* ---------- Copy (EN / VI) ---------- */
 const T={
 en:{brandsub:"Solution Finder",learn:"Learn more about us:",toDark:"Switch to dark mode",toLight:"Switch to light mode",visit:"Visit adaglobal.com",noteAll:"We record your answers anonymously to improve this tool. Your email is stored only if you ask a consultant to contact you.",noteEmail:"Your answers are stored only if you ask a consultant to contact you.",
- steps:["Your brand","Your needs","Confirm","Packages","Consultant"],
- introH:"Explore the ideal package for your enterprise",
- introP:"Answer a few questions about your channels, sales and goals. In about 3 minutes, you’ll get the packages that fit best, with an estimated monthly fee.",
- f1:"Questions",f1v:"11",f2:"Time",f2v:"≈ 3 min",f3:"Cost",f3v:"Free, no sign-up",
+ steps:["Your brand","Your needs","Confirm","Solution","Consultant"],
+ introH:"Explore the solution for your enterprise",
+ introP:"Answer a few questions about your channels, sales and goals. In about 3 minutes, you’ll see the solution that fits your brand best, with an estimated monthly fee.",
  start:"Get started",
  undH:"We understand what growing brands deal with",
  undP:"Most brands we talk to face at least one of these:",
- und:[["Too many channels to run","Shopee, Lazada, TikTok Shop and your own site each need daily attention."],
+ und:[["Too many channels to run","Shopee, TikTok Shop and your own site each need daily attention."],
       ["Sales that don’t scale","Ads, livestreams and KOLs cost more each season, but growth slows."],
       ["Data in silos","Sales, ads and customer data sit in different places, so decisions take longer."],
       ["Unclear budget","It’s hard to know what a full-service partner should cost before the first call."]],
  undCTA:"Next",back:"Back",next:"Next",
- s1H:"About your brand",s1P:"This helps us size the right package.",
+ s1H:"About your brand",s1P:"This helps us size the right solution.",
  s2H:"What you need",s2P:"Choose everything that applies.",
  qCat:"Product category",qCh:"Where do you sell today?",qGmv:"Current monthly online sales",qTgt:"Target monthly online sales in 12 months",qSku:"Number of products (SKUs)",
- qSvc:"Services you need",qLive:"Livestream sessions per month",qKol:"KOL / KOC support",qData:"Data and AI needs",qBud:"Monthly budget for these services",qStart:"When do you want to start?",
- multi:"(choose one or more)",req:"Choose an option to continue.",reqM:"Choose at least one option.",
- cfH:"Please check your answers",cfP:"Your packages are calculated from these answers.",edit:"Edit",
- cfOk:"My answers are correct.",cfErr:"Tick the box to confirm your answers.",see:"See my packages",
- rsTag:"Best match",rsOther:"Other options for you",match:"match",
- fee:"Estimated monthly fee",perM:"per month",inBud:"Within your budget",outBud:"Above your stated budget",
- disc:"Indicative estimate only. A consultant confirms the final price after scoping.",cont:"Continue",
+ qSvc:"Services you need",qLive:"Livestream sessions per month",qVideo:"Videos per month",qMedia:"Monthly media spend for ads & affiliate",qDur:"Duration of service",qBud:"Monthly budget for these services",qStart:"When do you want to start?",
+ catOther:"Please specify your category",catOtherPh:"e.g. Pet care",liveOther:"Number of sessions per month",liveOtherPh:"e.g. 12",durOther:"Duration in months",durOtherPh:"e.g. 18",
+ sessions:n=>`${n} sessions`,months:n=>`${n} months`,
+ multi:"(choose one or more)",req:"Choose an option to continue.",reqM:"Choose at least one option.",otherErr:"Please tell us a little more.",numErr:"Enter a whole number greater than 0.",
+ cfH:"Please check your answers",cfP:"Your solution is calculated from these answers.",edit:"Edit",
+ cfOk:"My answers are correct.",cfErr:"Tick the box to confirm your answers.",see:"See my solution",
+ rsTag:"Recommended solution",rsLead:n=>`A combination across ${n} service area${n>1?"s":""}, built from your answers.`,rsAreas:"How each option matches your needs",match:"match",
+ rsPick:"Recommended",rsNone:"Not needed for your answers",covers:"Covers",
+ fee:"Estimated monthly fee",perM:"per month",oneOff:m=>`+ ${m} one-off dashboard set-up`,inBud:"Within your budget",outBud:"Above your stated budget",
+ nInsight:"Data insight consulting is quoted separately.",nMarket:"Store operation on Lazada / Tiki is quoted separately.",nDur:d=>`Planned duration: ${d}.`,
+ custom:"Custom scope",customP:"Your needs call for a tailored scope. A consultant can put it together for you.",
+ disc:"Indicative estimate only – final price confirmed by an ADA consultant after scoping.",cont:"Continue",
  csH:"Would you like to talk to an ADA consultant?",csP:"A consultant can review your answers and prepare a tailored proposal.",
  csCheck:"Yes, I’d like a consultant to contact me.",email:"Your email",emailPh:"name@company.com",
  emailErr:"Enter a valid email so the consultant can reach you.",consent:"I agree that ADA may contact me about this request and store my answers for that purpose.",
  consentErr:"Tick the box so we can contact you.",finish:"Finish",
- doneH:"All done",doneYes:e=>`Thanks. A consultant will email you at ${e} within one working day.`,doneNo:"Thanks for using Solution Finder. You can come back any time to compare packages.",home:"Back to home"},
+ doneH:"All done",doneYesH:"We’ve received your request",
+ doneYes:e=>`Thank you for exploring ADA Solution Finder. One of our solution consultants will personally review your answers and reach out to <b>${e}</b> within one business day with a tailored proposal. We look forward to helping your brand grow.`,
+ doneNo:"Thanks for using Solution Finder. You can come back any time to explore your options.",home:"Back to home"},
 };
 const O={ /* options: [id, label, legacy label – unused] */
- cat:[["fmcg","FMCG","FMCG"],["beauty","Beauty & personal care","Làm đẹp & chăm sóc cá nhân"],["fashion","Fashion","Thời trang"],["elec","Electronics","Điện tử"],["mom","Mother & baby","Mẹ & bé"],["fnb","Food & beverage","Thực phẩm & đồ uống"],["other","Other","Khác"]],
+ cat:[["health","Health & beauty","Sức khỏe & làm đẹp"],["fashion","Fashion","Thời trang"],["elec","Electronics","Điện tử"],["mom","Mother & baby","Mẹ & bé"],["fnb","Food & beverage","Thực phẩm & đồ uống"],["home","Home living","Nhà cửa & đời sống"],["other","Other","Khác"]],
  ch:[["shopee","Shopee","Shopee"],["lazada","Lazada","Lazada"],["tiktok","TikTok Shop","TikTok Shop"],["tiki","Tiki","Tiki"],["web","Own website","Website riêng"],["offline","Offline only","Chỉ bán offline"]],
  gmv:[["0","Under 500M VND","Dưới 500 triệu"],["1","500M – 2B VND","500 triệu – 2 tỷ"],["2","2B – 10B VND","2 – 10 tỷ"],["3","Over 10B VND","Trên 10 tỷ"]],
  sku:[["0","Under 50","Dưới 50"],["1","50 – 200","50 – 200"],["2","200 – 1,000","200 – 1.000"],["3","Over 1,000","Trên 1.000"]],
- svc:[["ops","Store operations","Vận hành gian hàng"],["ads","Onsite ads","Quảng cáo trên sàn"],["live","Livestream","Livestream"],["kol","KOL / KOC & affiliate","KOL / KOC & affiliate"],["content","Content production","Sản xuất nội dung"],["cs","Customer service / chatbot","Chăm sóc khách hàng / chatbot"],["dash","Data dashboard","Dashboard dữ liệu"],["ful","Fulfilment","Kho vận"]],
- live:[["0","None","Không"],["4","4","4"],["8","8","8"],["16","16","16"]],
- kol:[["none","None","Không"],["koc","KOC affiliate","KOC affiliate"],["micro","Micro KOL","Micro KOL"],["macro","Macro KOL","Macro KOL"],["celeb","Celebrity","Người nổi tiếng"]],
- data:[["dashboard","Sales dashboard","Dashboard bán hàng"],["cdp","Customer data platform","Nền tảng dữ liệu khách hàng (CDP)"],["perso","Personalisation","Cá nhân hóa"],["cai","Conversational AI","AI hội thoại"],["none","Not yet","Chưa cần"]],
- bud:[["50","Under 50M VND","Dưới 50 triệu"],["150","50M – 150M VND","50 – 150 triệu"],["400","150M – 400M VND","150 – 400 triệu"],["9999","Over 400M VND","Trên 400 triệu"]],
+ svc:[["live","Livestream","Livestream"],["video","Video production","Sản xuất video"],["ads","Onsite ads","Quảng cáo trên sàn"],["aff","Affiliate & KOL","Affiliate & KOL"],["store","Store operation","Vận hành gian hàng"],["dash","Performance dashboard","Dashboard hiệu quả"],["insight","Data insight consulting","Tư vấn insight dữ liệu"]],
+ live:[["4","4","4"],["8","8","8"],["16","16","16"],["30","30","30"],["other","Other","Khác"]],
+ video:[["4","4","4"],["8","8","8"],["16","16","16"],["30","30","30"]],
+ /* id = mid-point in million VND, used for the 10% management fee */
+ media:[["30","Under 50M VND","Dưới 50 triệu"],["125","50M – 200M VND","50 – 200 triệu"],["350","200M – 500M VND","200 – 500 triệu"],["600","Over 500M VND","Trên 500 triệu"]],
+ dur:[["6","6 months","6 tháng"],["12","1 year","1 năm"],["24","2 years","2 năm"],["other","Other","Khác"],["unsure","Not sure yet","Cần suy nghĩ thêm"]],
+ bud:[["100","Under 100M VND","Dưới 100 triệu"],["300","100M – 300M VND","100 – 300 triệu"],["1000","300M – 1B VND","300 triệu – 1 tỷ"],["99999","Over 1B VND","Trên 1 tỷ"]],
  start:[["1","Within 1 month","Trong 1 tháng"],["3","Within 3 months","Trong 3 tháng"],["6","Within 6 months","Trong 6 tháng"],["99","Just exploring","Đang tìm hiểu"]]
 };
-/* Packages and prices = project assumptions (Inputs, Packages & Pricing tab). Million VND per month. */
-const PK=[
- {id:"P1",lvl:0,ai:0,from:30,to:60,svc:["ops","ads"],liveInc:0,koc:false,dash:false,bot:false,
-  en:{n:"Starter – Marketplace Launch",b:"For brands under 500M VND a month on 1–2 platforms.",inc:["Store set-up & operations","Product listing","Basic onsite ads","Monthly report"]}},
- {id:"P2",lvl:1,ai:0,from:80,to:150,svc:["ops","ads","live","kol"],liveInc:4,koc:true,dash:false,bot:false,
-  en:{n:"Growth – Marketplace & Social Commerce",b:"For brands at 500M–2B VND a month on 2–3 platforms.",inc:["Everything in Starter","TikTok Shop","Ads optimisation","4 livestreams a month","KOC affiliate programme"]}},
- {id:"P3",lvl:2,ai:1,from:180,to:350,svc:["ops","ads","live","kol","content","dash"],liveInc:4,koc:true,dash:true,bot:false,
-  en:{n:"Accelerate – Full-funnel Commerce & Data",b:"For brands at 2–10B VND a month or with several categories.",inc:["Everything in Growth","Content studio","KOL campaign management","Sales dashboard","CRM activation"]}},
- {id:"P4",lvl:3,ai:2,from:400,to:800,svc:["ops","ads","live","kol","content","dash","cs"],liveInc:4,koc:true,dash:true,bot:true,
-  en:{n:"Enterprise – Data & AI Commerce",b:"For brands over 10B VND a month or needing a CDP or AI.",inc:["Everything in Accelerate","Customer data platform","Personalisation","Conversational AI","Custom scope"]}}
+/* Solution matrix, rules and rates = project assumptions ("Inputs, Packages & Pricing" tab, sections B–D).
+   Amounts in million VND. */
+const AREAS=[
+ {id:"mkt",en:"E-commerce marketing",group:"svc",pickOne:true,
+  need:()=>A.svc.filter(s=>["live","video","ads","aff"].includes(s)),
+  opts:[{id:"M1",en:"Livestream & video production",covers:["live","video"]},
+        {id:"M2",en:"Onsite ads & affiliate (KOL)",covers:["ads","aff"]},
+        {id:"M3",en:"All-in-one e-commerce marketing",covers:["live","video","ads","aff"]}]},
+ /* One store option per platform the brand sells on; Lazada / Tiki are quoted separately */
+ {id:"store",en:"E-commerce store operation",group:"ch",pickOne:false,
+  need:()=>A.svc.includes("store")?A.ch.filter(c=>["shopee","tiktok","web"].includes(c)):[],
+  opts:[{id:"S1",en:"Shopee",covers:["shopee"]},{id:"S2",en:"TikTok Shop",covers:["tiktok"]},{id:"S3",en:"Brand.com",covers:["web"]}]},
+ {id:"data",en:"E-commerce data solution",group:"svc",pickOne:true,
+  need:()=>A.svc.filter(s=>["dash","insight"].includes(s)),
+  opts:[{id:"D1",en:"Performance dashboard",covers:["dash"]},{id:"D2",en:"Dashboard + insight consultant",covers:["dash","insight"]}]}
 ];
+const RATE={liveHr:[1.5,3],hrsPerSession:2,video:[3,4],store:50,commission:.05,mediaFee:.1,dashSetup:130};
+/* Mid-points stand in for the sales ranges the form asks about */
+const GMV_MID=[300,1200,5000,12000];
 
 /* ---------- State ---------- */
 let lang="en", screen="intro";
-const A={cat:null,ch:[],gmv:null,tgt:null,sku:null,svc:[],live:"0",kol:"none",data:[],bud:null,start:null,confirmed:false,wants:false,email:"",consent:false};
+const blank=()=>({cat:null,catOther:"",ch:[],gmv:null,tgt:null,sku:null,svc:[],live:null,liveOther:"",video:null,media:null,dur:null,durOther:"",bud:null,start:null,confirmed:false,wants:false,email:"",consent:false});
+const A=blank();
 const STEP_OF={s1:0,s2:1,confirm:2,results:3,consult:4};
 const $=s=>document.querySelector(s);
 const t=k=>T[lang][k];
 const lbl=(group,id)=>{const o=O[group].find(x=>x[0]===id);return o?(lang==="en"?o[1]:o[2]):"";};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const has=s=>A.svc.includes(s);
+const catL=()=>A.cat==="other"?`${lbl("cat","other")} – ${A.catOther.trim()}`:lbl("cat",A.cat);
+const liveL=()=>A.live==="other"?t("sessions")(+A.liveOther):lbl("live",A.live);
+const durL=()=>A.dur==="other"?t("months")(+A.durOther):lbl("dur",A.dur);
 
 /* ---------- Scoring & pricing ---------- */
-function compute(){
-  const tier=+A.tgt;
-  const platforms=A.ch.filter(c=>c!=="offline").length;
-  const factor=(platforms>=3||+A.sku>=2)?1.2:1.0;
-  const aiMods=A.data.filter(d=>["cdp","perso","cai"].includes(d)).length;
-  const aiNeed=aiMods>=2?2:aiMods===1?1:0;
-  const svcSel=A.svc.filter(s=>s!=="ful");
-  const budget=+A.bud;
-  const live=+A.live;
-  return PK.map(p=>{
-    let s=0;
-    const d=Math.abs(p.lvl-tier); s+=[40,22,8,0][d];
-    const platFit=p.lvl===0?(platforms<=2):p.lvl===1?(platforms>=1&&platforms<=3):(platforms>=2);
-    s+=platFit?15:5;
-    s+=svcSel.length?Math.round(20*svcSel.filter(x=>p.svc.includes(x)).length/svcSel.length):20;
-    s+=p.ai===aiNeed?15:(p.ai>aiNeed?(p.ai-aiNeed===1?9:4):0);
-    let fr=p.from,to=p.to;
-    const extra=Math.max(0,live-p.liveInc); fr+=extra*8; to+=extra*15;
-    if(A.kol==="koc"&&!p.koc){fr+=20;to+=50;}
-    if(["micro","macro","celeb"].includes(A.kol)){fr+=50;to+=200;}
-    if((A.svc.includes("cs")||A.data.includes("cai"))&&!p.bot){fr+=30;to+=80;}
-    if((A.data.includes("dashboard")||A.svc.includes("dash"))&&!p.dash){fr+=15;to+=40;}
-    fr=Math.round(fr*factor); to=Math.round(to*factor);
-    const fits=budget>=fr;
-    s+=fits?10:(budget>=fr*0.7?5:0);
-    return {p,score:Math.max(5,Math.min(98,s)),from:fr,to,fits};
-  }).sort((a,b)=>b.score-a.score);
+/* Rule D: 70% × share of the brand's needs covered + 30% × share of the option used */
+const fit=(covers,needs)=>{if(!needs.length) return 0;const hit=covers.filter(c=>needs.includes(c)).length;return .7*hit/needs.length+.3*hit/covers.length;};
+/* Display calibration (monotone, keeps the ranking): a raw fit in the 60s reads as ~75%,
+   strong fits stay close to their raw value, and nothing shows a flat 100%. */
+const CAL=[[0,30],[.5,70],[.9,90],[1,98]];
+function calibrate(r){
+  for(let i=1;i<CAL.length;i++){const [x0,y0]=CAL[i-1],[x1,y1]=CAL[i];if(r<=x1) return Math.round(y0+(y1-y0)*(r-x0)/(x1-x0));}
+  return 98;
 }
+const sessions=()=>A.live==="other"?(+A.liveOther||0):(+A.live||0);
+function compute(){
+  const areas=AREAS.map(a=>{
+    const needs=a.need();
+    const opts=a.opts.map(o=>{
+      const raw=a.pickOne?fit(o.covers,needs):(o.covers.some(c=>needs.includes(c))?1:0);
+      return {o,raw,pct:raw>0?calibrate(raw):0};
+    }).sort((x,y)=>y.raw-x.raw);
+    const chosen=!needs.length?[]:a.pickOne?[opts[0]]:opts.filter(x=>x.raw>0);
+    return {a,needs,opts,chosen,raw:!needs.length?0:a.pickOne?opts[0].raw:1};
+  }).filter(x=>x.needs.length);
+  const ids=areas.flatMap(x=>x.chosen.map(c=>c.o.id));
+  let from=0,to=0;
+  if(has("live")){const h=sessions()*RATE.hrsPerSession;from+=h*RATE.liveHr[0];to+=h*RATE.liveHr[1];}
+  if(has("video")){const v=+A.video||0;from+=v*RATE.video[0];to+=v*RATE.video[1];}
+  if(has("ads")||has("aff")){const m=(+A.media||0)*RATE.mediaFee;from+=m;to+=m;}
+  const st=areas.find(x=>x.a.id==="store");
+  if(st){const f=st.chosen.length*RATE.store+RATE.commission*GMV_MID[+A.gmv||0];from+=f;to+=f;}
+  const oneOff=ids.some(id=>id==="D1"||id==="D2")?RATE.dashSetup:0;
+  from=Math.round(from); to=Math.round(to);
+  const raw=areas.length?areas.reduce((s,x)=>s+x.raw,0)/areas.length:0;
+  return {areas,ids,score:areas.length?Math.max(75,calibrate(raw)):0,from,to,oneOff,fits:+A.bud>=from};
+}
+const optName=id=>{for(const a of AREAS){const o=a.opts.find(o=>o.id===id);if(o) return o.en;}return "";};
 const money=(m)=>lang==="en"
   ? (m>=1000?`${(m/1000).toLocaleString("en-US",{maximumFractionDigits:2})}B`:`${m.toLocaleString("en-US")}M`)
   : (m>=1000?`${(m/1000).toLocaleString("vi-VN",{maximumFractionDigits:2})} tỷ`:`${m.toLocaleString("vi-VN")} triệu`);
-const range=(a,b)=>lang==="en"?`VND ${money(a)} – ${money(b)}`:`${money(a)} – ${money(b)} ₫`;
+const range=(a,b)=>a===b?(lang==="en"?`VND ${money(a)}`:`${money(a)} ₫`):(lang==="en"?`VND ${money(a)} – ${money(b)}`:`${money(a)} – ${money(b)} ₫`);
 
 /* ---------- Logging to Google Sheet (Apps Script web app) ----------
    ENDPOINT: paste the Apps Script /exec URL after deploying. Empty = logging off.
@@ -315,13 +356,17 @@ const enL=(g,id)=>{const o=O[g].find(x=>x[0]===id);return o?o[1]:"";};
 const enMany=(g,arr)=>arr.map(x=>enL(g,x)).join("; ");
 function snapshot(event){
   const d={session_id:SID,event,lang,client_time:new Date().toISOString(),
-    category:enL("cat",A.cat),channels:enMany("ch",A.ch),current_gmv:enL("gmv",A.gmv),target_gmv:enL("gmv",A.tgt),skus:enL("sku",A.sku),
-    services:enMany("svc",A.svc),livestream:A.svc.includes("live")?enL("live",A.live):"",kol:enL("kol",A.kol),data_ai:enMany("data",A.data),
+    category:enL("cat",A.cat),category_other:A.cat==="other"?A.catOther.trim():"",channels:enMany("ch",A.ch),current_gmv:enL("gmv",A.gmv),target_gmv:enL("gmv",A.tgt),skus:enL("sku",A.sku),
+    services:enMany("svc",A.svc),
+    livestream:has("live")?(A.live==="other"?A.liveOther:enL("live",A.live)):"",
+    videos:has("video")?enL("video",A.video):"",
+    media_spend:(has("ads")||has("aff"))?enL("media",A.media):"",
+    duration:A.dur==="other"?`${A.durOther} months`:enL("dur",A.dur),
     budget:enL("bud",A.bud),start:enL("start",A.start)};
-  if(A.tgt!==null&&A.bud!==null&&A.sku!==null){
-    const R=compute(),top=R[0];
-    Object.assign(d,{top_package:top.p.id,top_score:top.score,all_scores:R.map(r=>r.p.id+":"+r.score).join("|"),
-      price_from_m:top.from,price_to_m:top.to,within_budget:top.fits?"yes":"no",qualified:(top.fits&&+A.start<=3)?"yes":"no"});
+  if(A.svc.length&&A.gmv!==null&&A.bud!==null){
+    const R=compute();
+    Object.assign(d,{solution:R.ids.join(" + "),match:R.score,price_from_m:R.from,price_to_m:R.to,one_off_m:R.oneOff,
+      within_budget:R.fits?"yes":"no",qualified:(R.fits&&+A.start<=3)?"yes":"no"});
   }
   if(event==="lead"||event==="finish") d.consultant=A.wants?"yes":"no";
   if(event==="lead"){d.email=A.email;d.consent=A.consent?"yes":"no";}
@@ -346,9 +391,19 @@ function chips(key,group,multi){
     const on=multi?val.includes(id):val===id;
     return `<button type="button" class="chip" data-key="${key}" data-id="${id}" data-multi="${multi?1:0}" aria-pressed="${on}">${esc(lang==="en"?en:vi)}</button>`;}).join("")}</div>`;
 }
-function q(key,group,label,multi,hide){
-  return `<fieldset class="q${hide?" hidden":""}" id="q-${key}"><legend>${label}${multi?`<span class="hint">${t("multi")}</span>`:""}</legend>${chips(key,group,multi)}<div class="err" id="e-${key}"></div></fieldset>`;
+/* Free-text / number field revealed when "Other" is picked */
+const OTHER={cat:["catOther","catOtherPh",false],live:["liveOther","liveOtherPh",true],dur:["durOther","durOtherPh",true]};
+function otherField(key){
+  const [l,ph,num]=OTHER[key];
+  return `<div class="field other${A[key]==="other"?"":" hidden"}" id="o-${key}"><label for="i-${key}">${t(l)}</label>
+    <input id="i-${key}" data-other="${key}" type="text" autocomplete="off" ${num?'inputmode="numeric" pattern="[0-9]*" maxlength="3"':'maxlength="60"'} placeholder="${t(ph)}" value="${esc(A[key+"Other"])}"></div>`;
 }
+function q(key,group,label,multi,hide){
+  return `<fieldset class="q${hide?" hidden":""}" id="q-${key}"><legend>${label}${multi?`<span class="hint">${t("multi")}</span>`:""}</legend>${chips(key,group,multi)}${key in OTHER?otherField(key):""}<div class="err" id="e-${key}"></div></fieldset>`;
+}
+/* Conditional questions on step 2, keyed by the services that switch them on */
+const SHOW_IF={live:["live"],video:["video"],media:["ads","aff"]};
+const shown=k=>SHOW_IF[k].some(has);
 const ICONS=[
  '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="7" rx="2"/><rect x="14" y="4" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>',
  '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>',
@@ -361,7 +416,6 @@ function render(){
   if(screen==="intro"){
     h=`<section class="panel intro">
       <div><h1>${t("introH")}</h1><p class="lead">${t("introP")}</p>
-      <div class="facts"><div>${t("f1")}<b>${t("f1v")}</b></div><div>${t("f2")}<b>${t("f2v")}</b></div><div>${t("f3")}<b>${t("f3v")}</b></div></div>
       <p class="note">${CONFIG.LOG_MODE==="all"?t("noteAll"):t("noteEmail")}</p>
       <button class="btn primary" data-go="understand" data-ev="start">${t("start")}</button></div>
       <div class="intro-visual" aria-hidden="true">
@@ -370,7 +424,7 @@ function render(){
         <circle cx="100" cy="100" r="36" fill="var(--chip)"/>
         <circle class="arc arc-a" cx="100" cy="100" r="92" fill="none" stroke="var(--violet)" stroke-width="8" stroke-linecap="round" stroke-dasharray="420 600"/>
         <circle class="arc arc-b" cx="100" cy="100" r="64" fill="none" stroke="var(--magenta)" stroke-width="8" stroke-linecap="round" stroke-dasharray="230 500"/>
-        <text x="100" y="108" text-anchor="middle" font-family="var(--font)" font-weight="700" font-size="24" fill="var(--ink)">P1–P4</text></svg>
+        <svg x="72" y="86.85" width="56" height="26.3" viewBox="0 0 100 47" style="color:var(--ink)"><use href="#ada-logo"/></svg></svg>
       </div></section>`;
   }
   else if(screen==="understand"){
@@ -385,7 +439,8 @@ function render(){
   }
   else if(screen==="s2"){
     h=`${stepsBar()}<section class="panel"><h2>${t("s2H")}</h2><p class="lead">${t("s2P")}</p>
-      ${q("svc","svc",t("qSvc"),true)}${q("live","live",t("qLive"),false,!A.svc.includes("live"))}${q("kol","kol",t("qKol"))}${q("data","data",t("qData"),true)}${q("bud","bud",t("qBud"))}${q("start","start",t("qStart"))}
+      ${q("svc","svc",t("qSvc"),true)}${q("live","live",t("qLive"),false,!shown("live"))}${q("video","video",t("qVideo"),false,!shown("video"))}${q("media","media",t("qMedia"),false,!shown("media"))}
+      ${q("dur","dur",t("qDur"))}${q("bud","bud",t("qBud"))}${q("start","start",t("qStart"))}
       <div class="actions"><button class="btn ghost" data-go="s1">${t("back")}</button><button class="btn primary" data-next="s2">${t("next")}</button></div></section>`;
   }
   else if(screen==="confirm"){
@@ -393,29 +448,41 @@ function render(){
     const many=(g,arr)=>arr.map(x=>lbl(g,x)).join(", ");
     h=`${stepsBar()}<section class="panel"><h2>${t("cfH")}</h2><p class="lead">${t("cfP")}</p>
       <div class="sum-head"><h3>${t("s1H")}</h3><button class="link" data-go="s1">${t("edit")}</button></div>
-      <dl class="sum">${row(t("qCat"),lbl("cat",A.cat))}${row(t("qCh"),many("ch",A.ch))}${row(t("qGmv"),lbl("gmv",A.gmv))}${row(t("qTgt"),lbl("gmv",A.tgt))}${row(t("qSku"),lbl("sku",A.sku))}</dl>
+      <dl class="sum">${row(t("qCat"),catL())}${row(t("qCh"),many("ch",A.ch))}${row(t("qGmv"),lbl("gmv",A.gmv))}${row(t("qTgt"),lbl("gmv",A.tgt))}${row(t("qSku"),lbl("sku",A.sku))}</dl>
       <div class="sum-head"><h3>${t("s2H")}</h3><button class="link" data-go="s2">${t("edit")}</button></div>
-      <dl class="sum">${row(t("qSvc"),many("svc",A.svc))}${A.svc.includes("live")?row(t("qLive"),lbl("live",A.live)):""}${row(t("qKol"),lbl("kol",A.kol))}${row(t("qData"),many("data",A.data))}${row(t("qBud"),lbl("bud",A.bud))}${row(t("qStart"),lbl("start",A.start))}</dl>
+      <dl class="sum">${row(t("qSvc"),many("svc",A.svc))}${shown("live")?row(t("qLive"),liveL()):""}${shown("video")?row(t("qVideo"),lbl("video",A.video)):""}${shown("media")?row(t("qMedia"),lbl("media",A.media)):""}${row(t("qDur"),durL())}${row(t("qBud"),lbl("bud",A.bud))}${row(t("qStart"),lbl("start",A.start))}</dl>
       <label class="check"><input type="checkbox" id="cfok" ${A.confirmed?"checked":""}><span>${t("cfOk")}</span></label><div class="err" id="e-cf"></div>
       <div class="actions"><button class="btn ghost" data-go="s2">${t("back")}</button><button class="btn primary" data-next="confirm">${t("see")}</button></div></section>`;
   }
   else if(screen==="results"){
-    const R=compute(); const top=R[0]; const C=2*Math.PI*80;
-    const L=x=>x.p[lang];
-    h=`${stepsBar()}<section class="panel">
-      <div class="top"><span class="tag">${t("rsTag")}</span>
-        <div class="ring" role="img" aria-label="${top.score}% ${t("match")}">
+    const R=compute(); const C=2*Math.PI*80;
+    const notes=[];
+    if(has("insight")) notes.push(t("nInsight"));
+    if(has("store")&&A.ch.some(c=>c==="lazada"||c==="tiki")) notes.push(t("nMarket"));
+    if(A.dur&&A.dur!=="unsure") notes.push(t("nDur")(durL()));
+    const notesH=notes.length?`<ul class="notes">${notes.map(n=>`<li>${esc(n)}</li>`).join("")}</ul>`:"";
+    const top=!R.areas.length
+      ? `<div class="top"><span class="tag">${t("rsTag")}</span><h2>${t("custom")}</h2><p class="best">${t("customP")}</p>${notesH}</div>`
+      : `<div class="top"><span class="tag">${t("rsTag")}</span>
+        <div class="ring" role="img" aria-label="${R.score}% ${t("match")}">
           <svg viewBox="0 0 180 180"><circle cx="90" cy="90" r="80" fill="none" stroke="var(--line)" stroke-width="14"/>
-          <circle class="val" cx="90" cy="90" r="80" fill="none" stroke="var(--magenta)" stroke-width="14" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-target="${C*(1-top.score/100)}"/></svg>
-          <div class="pct"><div>${top.score}%<small>${t("match")}</small></div></div>
+          <circle class="val" cx="90" cy="90" r="80" fill="none" stroke="var(--magenta)" stroke-width="14" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-target="${C*(1-R.score/100)}"/></svg>
+          <div class="pct"><div>${R.score}%<small>${t("match")}</small></div></div>
         </div>
-        <h2>${top.p.id} ${L(top).n}</h2><p class="best">${L(top).b}</p>
-        <div class="fee">${range(top.from,top.to)}<small>${t("fee")}, ${t("perM")}</small></div>
-        <ul class="incl">${L(top).inc.map(i=>`<li>${i}</li>`).join("")}</ul>
-        <div class="budget ${top.fits?"ok":"no"}">${top.fits?t("inBud"):t("outBud")}</div>
-      </div>
-      <h3 style="margin:22px 0 0;color:var(--ink)">${t("rsOther")}</h3>
-      <ul class="others">${R.slice(1).map(r=>`<li><div class="nm"><b>${r.p.id} ${L(r).n}</b><span>${range(r.from,r.to)} · ${r.fits?t("inBud"):t("outBud")}</span></div><div class="bar" aria-hidden="true"><i style="width:${r.score}%"></i></div><div class="p">${r.score}%</div></li>`).join("")}</ul>
+        <h2>${R.ids.join(" + ")}</h2><p class="best">${t("rsLead")(R.areas.length)}</p>
+        <ul class="incl">${R.ids.map(id=>`<li><b>${id}</b> ${optName(id)}</li>`).join("")}</ul>
+        ${R.to>0?`<div class="fee">${range(R.from,R.to)}<small>${t("fee")}, ${t("perM")}</small></div>`:""}
+        ${R.oneOff?`<div class="oneoff">${t("oneOff")(range(R.oneOff,R.oneOff))}</div>`:""}
+        ${R.to>0?`<div class="budget ${R.fits?"ok":"no"}">${R.fits?t("inBud"):t("outBud")}</div>`:""}
+        ${notesH}
+      </div>`;
+    const areas=R.areas.map(x=>`<h3 class="area">${x.a.en}</h3><ul class="others">${x.opts.map(r=>{
+      const pick=x.chosen.includes(r);
+      const sub=r.raw?`${pick?`<em>${t("rsPick")}</em> · `:""}${t("covers")}: ${r.o.covers.map(c=>lbl(x.a.group,c)).join(", ")}`:t("rsNone");
+      return `<li class="${pick?"pick":r.raw?"":"off"}"><div class="nm"><b>${r.o.id} ${r.o.en}</b><span>${sub}</span></div><div class="bar" aria-hidden="true"><i style="width:${r.pct}%"></i></div><div class="p">${r.raw?r.pct+"%":"–"}</div></li>`;
+    }).join("")}</ul>`).join("");
+    h=`${stepsBar()}<section class="panel">${top}
+      ${R.areas.length?`<h3 class="areas-h">${t("rsAreas")}</h3>${areas}`:""}
       <p class="disc">${t("disc")}</p>
       <div class="actions"><button class="btn ghost" data-go="confirm">${t("back")}</button><button class="btn primary" data-go="consult">${t("cont")}</button></div></section>`;
   }
@@ -430,7 +497,7 @@ function render(){
   }
   else if(screen==="done"){
     h=`<section class="panel done"><div class="mark"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
-      <h1>${t("doneH")}</h1><p>${A.wants?T[lang].doneYes(esc(A.email)):t("doneNo")}</p>
+      <h1>${A.wants?t("doneYesH"):t("doneH")}</h1><p>${A.wants?T[lang].doneYes(esc(A.email)):t("doneNo")}</p>
       <div class="links"><button class="btn primary" data-reset="1">${t("home")}</button><a class="btn ghost" href="https://adaglobal.com/" target="_blank" rel="noopener">${t("visit")}</a></div></section>`;
   }
   app.innerHTML=h;
@@ -446,9 +513,23 @@ function need(key,multi){
   const e=document.getElementById("e-"+key); if(e) e.textContent=ok?"":(multi?t("reqM"):t("req"));
   return ok;
 }
+function needOther(key){
+  if(A[key]!=="other") return true;
+  const num=OTHER[key][2], v=A[key+"Other"].trim();
+  const ok=num?/^\d+$/.test(v)&&+v>0:v.length>0;
+  const e=document.getElementById("e-"+key); if(e) e.textContent=ok?"":(num?t("numErr"):t("otherErr"));
+  return ok;
+}
 function validate(step){
-  if(step==="s1"){const r=["cat","ch","gmv","tgt","sku"].map(k=>need(k,k==="ch"));return r.every(Boolean);}
-  if(step==="s2"){const r=[need("svc",true),need("kol"),need("data",true),need("bud"),need("start")];return r.every(Boolean);}
+  if(step==="s1"){const r=["cat","ch","gmv","tgt","sku"].map(k=>need(k,k==="ch"));if(r[0]) r[0]=needOther("cat");return r.every(Boolean);}
+  if(step==="s2"){
+    const r=[need("svc",true)];
+    if(shown("live")) r.push(need("live")&&needOther("live"));
+    if(shown("video")) r.push(need("video"));
+    if(shown("media")) r.push(need("media"));
+    r.push(need("dur")&&needOther("dur"),need("bud"),need("start"));
+    return r.every(Boolean);
+  }
   if(step==="confirm"){A.confirmed=$("#cfok").checked;$("#e-cf").textContent=A.confirmed?"":t("cfErr");return A.confirmed;}
   if(step==="consult"){
     if(!A.wants) return true;
@@ -468,14 +549,13 @@ document.addEventListener("click",e=>{
   if(c){
     const k=c.dataset.key,id=c.dataset.id;
     if(c.dataset.multi==="1"){
-      let arr=A[k];
-      if(k==="data"&&id==="none") arr=arr.includes("none")?[]:["none"];
-      else { arr=arr.filter(x=>x!=="none"); arr=arr.includes(id)?arr.filter(x=>x!==id):[...arr,id]; }
-      A[k]=arr;
+      A[k]=A[k].includes(id)?A[k].filter(x=>x!==id):[...A[k],id];
       c.parentElement.querySelectorAll(".chip").forEach(b=>b.setAttribute("aria-pressed",A[k].includes(b.dataset.id)));
-      if(k==="svc"){const lq=$("#q-live"); if(lq){lq.classList.toggle("hidden",!A.svc.includes("live")); if(!A.svc.includes("live")) A.live="0";}}
+      if(k==="svc") Object.keys(SHOW_IF).forEach(qk=>{const el=$("#q-"+qk);if(el) el.classList.toggle("hidden",!shown(qk));});
     } else {
       A[k]=id; c.parentElement.querySelectorAll(".chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.id===id));
+      const of=document.getElementById("o-"+k);
+      if(of){of.classList.toggle("hidden",id!=="other"); if(id==="other") setTimeout(()=>document.getElementById("i-"+k)?.focus(),0);}
     }
     const er=document.getElementById("e-"+k); if(er) er.textContent="";
     return;
@@ -486,12 +566,19 @@ document.addEventListener("click",e=>{
     go(NEXT[s]);
     if(s==="confirm") log("results_shown");
   } return;}
-  const r=e.target.closest("[data-reset]"); if(r){Object.assign(A,{cat:null,ch:[],gmv:null,tgt:null,sku:null,svc:[],live:"0",kol:"none",data:[],bud:null,start:null,confirmed:false,wants:false,email:"",consent:false});SID=newId();go("intro");log("page_view");return;}
+  const r=e.target.closest("[data-reset]"); if(r){Object.assign(A,blank());SID=newId();go("intro");log("page_view");return;}
+});
+document.addEventListener("input",e=>{
+  const k=e.target.dataset.other; if(!k) return;
+  if(OTHER[k][2]) e.target.value=e.target.value.replace(/\D/g,"");
+  A[k+"Other"]=e.target.value;
+  const er=document.getElementById("e-"+k); if(er) er.textContent="";
 });
 document.addEventListener("change",e=>{
-  if(e.target.id==="wants"){A.wants=e.target.checked;$("#more").classList.toggle("hidden",!A.wants); if(A.wants) setTimeout(()=>$("#email").focus(),0);}
+  if(e.target.id==="wants"){A.wants=e.target.checked;$("#more").classList.toggle("hidden",!A.wants); if(A.wants) setTimeout(()=>$("#email")?.focus(),0);}
   if(e.target.id==="cfok"){A.confirmed=e.target.checked; if(A.confirmed) $("#e-cf").textContent="";}
 });
+
 /* ---------- Theme toggle ----------
    No saved choice = follow the system. A click pins the opposite of what is showing. */
 const root=document.documentElement, sysDark=matchMedia("(prefers-color-scheme: dark)");
