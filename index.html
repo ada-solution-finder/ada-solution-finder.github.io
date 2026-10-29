@@ -142,12 +142,18 @@ h3.areas-h{margin:26px 0 0;color:var(--ink);font-size:1.1rem}
 h3.area{margin:18px 0 0;font-size:.82rem;font-family:var(--font);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 h3.area+.others{margin-top:4px}
 .sub{color:var(--muted);font-size:.92rem;margin:4px 0 0}
-.ex-grid{list-style:none;padding:0;margin:14px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-.ex{border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;background:color-mix(in srgb,var(--chip) 45%,var(--surface))}
+/* Explore cards: each opens on its own; align-items:start keeps closed neighbours from stretching */
+.ex-grid{list-style:none;padding:0;margin:14px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;align-items:start}
+.ex{border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--chip) 45%,var(--surface));transition:border-color .15s}
+.ex:hover,.ex[open]{border-color:var(--accent)}
+.ex summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:14px 16px}
+.ex summary::-webkit-details-marker{display:none}
+.ex summary::after{content:"+";grid-column:2;grid-row:1 / span 2;align-self:center;font-size:1.3rem;line-height:1;color:var(--accent)}
+.ex[open] summary::after{content:"−"}
 .ex-area{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .ex b{color:var(--ink)}
-.ex p{margin:0;color:var(--muted);font-size:.9rem;flex:1}
-.ex-rate{font-size:.82rem;font-weight:600;color:var(--accent);margin-top:6px}
+.ex p{margin:0 16px;color:var(--muted);font-size:.9rem}
+.ex-rate{display:block;margin:8px 16px 14px;font-size:.82rem;font-weight:600;color:var(--accent)}
 /* Add-ons / ALC rates: collapsed by default */
 details.alc{margin-top:26px;border:1px solid var(--line);border-radius:14px;padding:0 16px}
 details.alc summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;font-family:var(--font-head);font-weight:700;color:var(--ink)}
@@ -304,7 +310,7 @@ en:{brandsub:"Solution Finder",learn:"Learn more about us:",toDark:"Switch to da
  cfH:"Please check your answers",cfP:"Your solution is calculated from these answers.",edit:"Edit",
  cfOk:"My answers are correct.",cfErr:"Tick the box to confirm your answers.",see:"See my solution",
  rsTag:"Your recommended solution",solH:"A solution built for your brand",rsLead:n=>`A combination across ${n} service area${n>1?"s":""}, built from your answers.`,rsAreas:"How each option matches your needs",match:"match",
- rsPick:"Recommended",covers:"Covers",exH:"Explore – you might also like",exP:"Other ADA solutions that pair well with your plan.",
+ rsPick:"Recommended",covers:"Covers",exH:"Explore – you might also like",exP:"Click a card to see more detail. Other ADA solutions that pair well with your plan.",
  alcH:"Add-ons / à-la-carte rates",alcP:"Build your own mix from individual services at these indicative rates.",alcCols:["Service","Rate","Unit","Note"],
  fee:"Estimated monthly fee",perM:"per month",oneOff:m=>`+ ${m} one-off dashboard set-up`,inBud:"Within your budget",outBud:"Above your stated budget",
  nInsight:"Data insight consulting is quoted separately.",nComm:"Includes the store operation fee and a 5% commission on online sales.",nMarket:"Store operation on Lazada / Tiki is quoted separately.",nDur:d=>`Planned duration: ${d}.`,
@@ -317,8 +323,8 @@ en:{brandsub:"Solution Finder",learn:"Learn more about us:",toDark:"Switch to da
  doneH:"All done",doneYesH:"We’ve received your request",
  bkH:"Book a call with your ADA consultant",bkP:"Pick a day, then a time. Times are in Vietnam time (GMT+7); your consultant confirms by e-mail.",
  bkTime:"Choose a time",bkPickDay:"Pick a day first.",bkPrev:"Previous month",bkNext:"Next month",bkErr:"Choose a day and a time for your call.",
- doneYes:(e,slot)=>`Thank you for exploring ADA Solution Finder.<br>Your call is booked for <b>${slot}</b> (Vietnam time, GMT+7). One of our solution consultants will personally review your answers and reach out to <b>${e}</b> within one business day to confirm. We look forward to helping your brand grow.`,
- doneNo:"Thanks for using Solution Finder. You can come back any time to explore your options.",home:"Back to home"},
+ doneYes:(e,slot)=>`Thank you for exploring ADA Solution Finder.<br>Your call is booked for <b>${slot}</b> (Vietnam time, GMT+7).<br>One of our solution consultants will personally review your answers and e-mail you at <b>${e}</b> within one business day to confirm.<br>We look forward to helping your brand grow.`,
+ doneNo:"Thank you for using ADA Solution Finder.<br>We look forward to welcoming you back whenever you are ready to explore your options.",home:"Back to home"},
 };
 const O={ /* options: [id, label, legacy label – unused] */
  cat:[["health","Health & beauty","Sức khỏe & làm đẹp"],["fashion","Fashion","Thời trang"],["elec","Electronics","Điện tử"],["mom","Mother & baby","Mẹ & bé"],["fnb","Food & beverage","Thực phẩm & đồ uống"],["home","Home living","Nhà cửa & đời sống"],["other","Other","Khác"]],
@@ -612,7 +618,7 @@ function render(){
     /* Options the answers did not call for become a light "you might also like" list */
     const extra=R.all.flatMap(x=>x.opts.filter(r=>r.raw===0).map(r=>({a:x.a,o:r.o})));
     const explore=extra.length?`<h3 class="areas-h">${t("exH")}</h3><p class="sub">${t("exP")}</p>
-      <ul class="ex-grid">${extra.map(({a,o})=>`<li class="ex"><span class="ex-area">${a.en}</span><b>${o.id} ${o.en}</b><p>${o.pitch}</p><span class="ex-rate">${rateOf(o.id)}</span></li>`).join("")}</ul>`:"";
+      <ul class="ex-grid">${extra.map(({a,o})=>`<li><details class="ex"><summary><span class="ex-area">${a.en}</span><b>${o.id} ${o.en}</b></summary><p>${o.pitch}</p><span class="ex-rate">${rateOf(o.id)}</span></details></li>`).join("")}</ul>`:"";
     h=`${stepsBar()}<section class="panel">${top}
       ${R.areas.length?`<h3 class="areas-h">${t("rsAreas")}</h3>${areas}`:""}
       ${explore}${alcTable()}
