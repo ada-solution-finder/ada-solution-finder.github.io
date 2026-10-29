@@ -131,8 +131,6 @@ dl.sum dt{color:var(--muted);padding-right:16px}
 .others .p{font-weight:700;text-align:right;color:var(--ink)}
 .others li.pick .nm b{color:var(--violet)}
 .others li.pick .bar i{background:linear-gradient(90deg,var(--magenta),var(--violet))}
-.disc.off-area{margin-top:6px}
-.others li.off{opacity:.5}
 .others em{font-style:normal;font-weight:600;color:var(--magenta)}
 .incl li b{color:var(--violet);margin-right:2px}
 .oneoff{font-size:.92rem;color:var(--muted);margin-top:6px}
@@ -141,6 +139,39 @@ dl.sum dt{color:var(--muted);padding-right:16px}
 h3.areas-h{margin:26px 0 0;color:var(--ink);font-size:1.1rem}
 h3.area{margin:18px 0 0;font-size:.82rem;font-family:var(--font);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 h3.area+.others{margin-top:4px}
+.sub{color:var(--muted);font-size:.92rem;margin:4px 0 0}
+.ex-grid{list-style:none;padding:0;margin:14px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.ex{border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;background:color-mix(in srgb,var(--chip) 45%,var(--surface))}
+.ex-area{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ex b{color:var(--ink)}
+.ex p{margin:0;color:var(--muted);font-size:.9rem;flex:1}
+.ex-rate{font-size:.82rem;font-weight:600;color:var(--violet);margin-top:6px}
+/* Add-ons / ALC rates: collapsed by default */
+details.alc{margin-top:26px;border:1px solid var(--line);border-radius:14px;padding:0 16px}
+details.alc summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;font-family:var(--font-head);font-weight:700;color:var(--ink)}
+details.alc summary::-webkit-details-marker{display:none}
+details.alc summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--violet)}
+details.alc[open] summary::after{content:"−"}
+details.alc .sub{margin:0}
+.tbl{overflow-x:auto;margin:10px 0 16px}
+.tbl table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:540px}
+.tbl th,.tbl td{text-align:left;vertical-align:top;padding:9px 12px 9px 0;border-top:1px solid var(--line)}
+.tbl thead th{border-top:0;font-size:.75rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.tbl tbody th{font-weight:600;color:var(--ink)}
+.tbl td{color:var(--muted)}
+.tbl td.num{white-space:nowrap;color:var(--ink);font-variant-numeric:tabular-nums}
+/* Phones: each rate becomes a stacked row (name / rate + unit / note) instead of a sideways-scrolling table */
+@media (max-width:680px){
+  .tbl{overflow:visible}
+  .tbl table,.tbl tbody,.tbl tr,.tbl tbody th{display:block;min-width:0}
+  .tbl thead{display:none}
+  .tbl tr{padding:11px 0;border-top:1px solid var(--line)}
+  .tbl th,.tbl td{border:0;padding:0}
+  .tbl td{display:inline}
+  .tbl td.num{font-weight:600;white-space:normal}
+  .tbl td:nth-of-type(2)::before{content:" · "}
+  .tbl td:nth-of-type(3){display:block;font-size:.85rem;margin-top:2px}
+}
 .disc{font-size:.85rem;color:var(--muted);margin-top:18px}
 
 /* Consult */
@@ -241,13 +272,14 @@ en:{brandsub:"Solution Finder",learn:"Learn more about us:",toDark:"Switch to da
  s2H:"What you need",s2P:"Choose everything that applies.",
  qCat:"Product category",qCh:"Where do you sell today?",qGmv:"Current monthly online sales",qTgt:"Target monthly online sales in 12 months",qSku:"Number of products (SKUs)",
  qSvc:"Services you need",qLive:"Livestream sessions per month (about 2 hours each)",qVideo:"Videos per month",qMedia:"Monthly media spend for ads & affiliate",qDur:"Duration of service",qBud:"Monthly budget for ADA services",qStart:"When do you want to start?",
- catOther:"Please specify your category",catOtherPh:"e.g. Pet care",liveOther:"Number of sessions per month",liveOtherPh:"e.g. 12",durOther:"Duration in months",durOtherPh:"e.g. 18",
- sessions:n=>`${n} sessions`,months:n=>`${n} months`,
+ catOther:"Please specify your category",catOtherPh:"e.g. Pet care",liveOther:"Number of sessions per month",liveOtherPh:"e.g. 12",videoOther:"Number of videos per month",videoOtherPh:"e.g. 10",durOther:"Duration in months",durOtherPh:"e.g. 18",
+ sessions:n=>`${n} sessions`,videos:n=>`${n} videos`,months:n=>`${n} months`,
  multi:"(choose one or more)",req:"Choose an option to continue.",reqM:"Choose at least one option.",otherErr:"Please tell us a little more.",numErr:"Enter a whole number greater than 0.",
  cfH:"Please check your answers",cfP:"Your solution is calculated from these answers.",edit:"Edit",
  cfOk:"My answers are correct.",cfErr:"Tick the box to confirm your answers.",see:"See my solution",
- rsTag:"Your recommended solution",solH:"A solution built for your brand",notNeeded:"Not part of your request",rsLead:n=>`A combination across ${n} service area${n>1?"s":""}, built from your answers.`,rsAreas:"How each option matches your needs",match:"match",
- rsPick:"Recommended",rsNone:"Not needed for your answers",covers:"Covers",
+ rsTag:"Your recommended solution",solH:"A solution built for your brand",rsLead:n=>`A combination across ${n} service area${n>1?"s":""}, built from your answers.`,rsAreas:"How each option matches your needs",match:"match",
+ rsPick:"Recommended",covers:"Covers",exH:"Explore – you might also like",exP:"Other ADA solutions that pair well with your plan.",
+ alcH:"Add-ons / à-la-carte rates",alcP:"Build your own mix from individual services at these indicative rates.",alcCols:["Service","Rate","Unit","Note"],
  fee:"Estimated monthly fee",perM:"per month",oneOff:m=>`+ ${m} one-off dashboard set-up`,inBud:"Within your budget",outBud:"Above your stated budget",
  nInsight:"Data insight consulting is quoted separately.",nComm:"Includes the store operation fee and a 5% commission on online sales.",nMarket:"Store operation on Lazada / Tiki is quoted separately.",nDur:d=>`Planned duration: ${d}.`,
  custom:"Custom scope",customP:"Your needs call for a tailored scope. A consultant can put it together for you.",
@@ -267,7 +299,7 @@ const O={ /* options: [id, label, legacy label – unused] */
  sku:[["0","Under 50","Dưới 50"],["1","50 – 200","50 – 200"],["2","200 – 1,000","200 – 1.000"],["3","Over 1,000","Trên 1.000"]],
  svc:[["live","Livestream","Livestream"],["video","Video production","Sản xuất video"],["ads","Onsite ads","Quảng cáo trên sàn"],["aff","Affiliate & KOL","Affiliate & KOL"],["store","Store operation","Vận hành gian hàng"],["dash","Performance dashboard","Dashboard hiệu quả"],["insight","Data insight consulting","Tư vấn insight dữ liệu"]],
  live:[["4","4","4"],["8","8","8"],["16","16","16"],["30","30 (daily)","30 (mỗi ngày)"],["other","Other","Khác"]],
- video:[["4","4","4"],["8","8","8"],["16","16","16"],["30","30","30"]],
+ video:[["4","4","4"],["8","8","8"],["16","16","16"],["30","30","30"],["other","Other","Khác"]],
  media:[["50","Under 50M VND","Dưới 50 triệu"],["200","50M – 200M VND","50 – 200 triệu"],["500","200M – 500M VND","200 – 500 triệu"],["1000","Over 500M VND","Trên 500 triệu"]],
  dur:[["6","6 months","6 tháng"],["12","1 year","1 năm"],["24","2 years","2 năm"],["other","Other","Khác"],["unsure","Not sure yet","Cần suy nghĩ thêm"]],
  bud:[["100","Under 100M VND","Dưới 100 triệu"],["300","100M – 300M VND","100 – 300 triệu"],["1000","300M – 1B VND","300 triệu – 1 tỷ"],["99999","Over 1B VND","Trên 1 tỷ"]],
@@ -278,25 +310,28 @@ const O={ /* options: [id, label, legacy label – unused] */
 const AREAS=[
  {id:"mkt",en:"E-commerce marketing",group:"svc",pickOne:true,
   need:()=>A.svc.filter(s=>["live","video","ads","aff"].includes(s)),
-  opts:[{id:"M1",en:"Livestream & video production",covers:["live","video"]},
-        {id:"M2",en:"Onsite ads & affiliate (KOL)",covers:["ads","aff"]},
-        {id:"M3",en:"All-in-one e-commerce marketing",covers:["live","video","ads","aff"]}]},
+  opts:[{id:"M1",en:"Livestream & video production",covers:["live","video"],pitch:"Hosted livestreams and short-form video that turn browsers into buyers."},
+        {id:"M2",en:"Onsite ads & affiliate (KOL)",covers:["ads","aff"],pitch:"Reach shoppers already searching on the marketplace, and grow with creators."},
+        {id:"M3",en:"All-in-one e-commerce marketing",covers:["live","video","ads","aff"],pitch:"Livestream, video, ads and KOL run by one team with one plan."}]},
  /* One store option per platform the brand sells on; Lazada / Tiki are quoted separately */
  {id:"store",en:"E-commerce store operation",group:"ch",pickOne:false,
   need:()=>A.svc.includes("store")?A.ch.filter(c=>["shopee","tiktok","web"].includes(c)):[],
-  opts:[{id:"S1",en:"Shopee",covers:["shopee"]},{id:"S2",en:"TikTok Shop",covers:["tiktok"]},{id:"S3",en:"Brand.com",covers:["web"]}]},
+  opts:[{id:"S1",en:"Shopee",covers:["shopee"],pitch:"Day-to-day Shopee store operation: listings, campaigns and customer care."},
+        {id:"S2",en:"TikTok Shop",covers:["tiktok"],pitch:"Sell where your customers watch, with TikTok Shop set-up and operation."},
+        {id:"S3",en:"Brand.com",covers:["web"],pitch:"Own the customer relationship with a D2C store run by ADA."}]},
  {id:"data",en:"E-commerce data solution",group:"svc",pickOne:true,
   need:()=>A.svc.filter(s=>["dash","insight"].includes(s)),
-  opts:[{id:"D1",en:"Performance dashboard",covers:["dash"]},{id:"D2",en:"Dashboard + insight consultant",covers:["dash","insight"]}]}
+  opts:[{id:"D1",en:"Performance dashboard",covers:["dash"],pitch:"Sales, ads and store performance in one live dashboard."},
+        {id:"D2",en:"Dashboard + insight consultant",covers:["dash","insight"],pitch:"A dashboard plus a consultant who turns the numbers into next steps."}]}
 ];
-const RATE={liveHr:[1.5,3],hrsPerSession:2,video:[3,4],store:50,commission:.05,mediaFee:.1,dashSetup:130};
+const RATE={liveHr:[1.5,3],hrsPerSession:2,video:[3,4],store:50,commission:.05,mediaFee:.1,dashSetup:130,ful:[.008,.015]};
 /* Fee FROM uses the low end of each answered range, fee TO the high end */
 const GMV_RANGE=[[0,500],[500,2000],[2000,10000],[10000,20000]];
 const MEDIA_RANGE={"50":[0,50],"200":[50,200],"500":[200,500],"1000":[500,1000]};
 
 /* ---------- State ---------- */
 let lang="en", screen="intro";
-const blank=()=>({cat:null,catOther:"",ch:[],gmv:null,tgt:null,sku:null,svc:[],live:null,liveOther:"",video:null,media:null,dur:null,durOther:"",bud:null,start:null,confirmed:false,wants:false,email:"",consent:false});
+const blank=()=>({cat:null,catOther:"",ch:[],gmv:null,tgt:null,sku:null,svc:[],live:null,liveOther:"",video:null,videoOther:"",media:null,dur:null,durOther:"",bud:null,start:null,confirmed:false,wants:false,email:"",consent:false});
 const A=blank();
 const STEP_OF={s1:0,s2:1,confirm:2,results:3,consult:4};
 const $=s=>document.querySelector(s);
@@ -306,6 +341,7 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
 const has=s=>A.svc.includes(s);
 const catL=()=>A.cat==="other"?`${lbl("cat","other")} – ${A.catOther.trim()}`:lbl("cat",A.cat);
 const liveL=()=>A.live==="other"?t("sessions")(+A.liveOther):lbl("live",A.live);
+const videoL=()=>A.video==="other"?t("videos")(+A.videoOther):lbl("video",A.video);
 const durL=()=>A.dur==="other"?t("months")(+A.durOther):lbl("dur",A.dur);
 
 /* ---------- Scoring & pricing ---------- */
@@ -319,6 +355,7 @@ function calibrate(r){
   return 98;
 }
 const sessions=()=>A.live==="other"?(+A.liveOther||0):(+A.live||0);
+const videos=()=>A.video==="other"?(+A.videoOther||0):(+A.video||0);
 function compute(){
   const all=AREAS.map(a=>{
     const needs=a.need();
@@ -333,7 +370,7 @@ function compute(){
   const ids=areas.flatMap(x=>x.chosen.map(c=>c.o.id));
   let from=0,to=0;
   if(has("live")){const h=sessions()*RATE.hrsPerSession;from+=h*RATE.liveHr[0];to+=h*RATE.liveHr[1];}
-  if(has("video")){const v=+A.video||0;from+=v*RATE.video[0];to+=v*RATE.video[1];}
+  if(has("video")){const v=videos();from+=v*RATE.video[0];to+=v*RATE.video[1];}
   if(has("ads")||has("aff")){const m=MEDIA_RANGE[A.media]||[0,0];from+=m[0]*RATE.mediaFee;to+=m[1]*RATE.mediaFee;}
   const st=areas.find(x=>x.a.id==="store");
   if(st){const g=GMV_RANGE[+A.gmv]||[0,0],fix=st.chosen.length*RATE.store;from+=fix+RATE.commission*g[0];to+=fix+RATE.commission*g[1];}
@@ -342,6 +379,27 @@ function compute(){
   const raw=areas.length?areas.reduce((s,x)=>s+x.raw,0)/areas.length:0;
   return {all,areas,ids,score:areas.length?Math.max(75,calibrate(raw)):0,from,to,oneOff,fits:+A.bud>=from};
 }
+const vndFull=(a,b)=>{const f=m=>Math.round(m*1e6).toLocaleString("en-US");return `VND ${f(a)}${b!==undefined&&b!==a?` – ${f(b)}`:""}`;};
+function rateOf(id){
+  const v=m=>`VND ${money(m)}`;
+  if(id==="M1") return `From ${v(RATE.liveHr[0])} / livestream hour · ${v(RATE.video[0])} / video`;
+  if(id==="M2") return `${RATE.mediaFee*100}% of media spend`;
+  if(id==="M3") return "M1 + M2 rates combined";
+  if(id[0]==="S") return `${v(RATE.store)} / store / month + ${RATE.commission*100}% of sales`;
+  if(id==="D1") return `${v(RATE.dashSetup)} one-off set-up`;
+  return `${v(RATE.dashSetup)} set-up + insight quoted separately`;
+}
+const ALC=()=>[
+ ["Livestream","per hour",vndFull(...RATE.liveHr),`About ${RATE.hrsPerSession} hours per session`],
+ ["Video production","per video",vndFull(...RATE.video),"Short-form video"],
+ ["Onsite ads & affiliate (KOL)","of media spend",`${RATE.mediaFee*100}%`,"Management fee on media spend"],
+ ["Store operation (Shopee / TikTok Shop / brand.com)","per store per month",vndFull(RATE.store),"Fixed fee"],
+ ["Sales commission","of online sales",`${RATE.commission*100}%`,"Added to the store operation fee"],
+ ["Fulfillment (pick-pack)","per order",vndFull(...RATE.ful),"Storage and delivery quoted separately"],
+ ["Performance dashboard","one-off set-up",vndFull(RATE.dashSetup),"≈ USD 5,000"]];
+const alcTable=()=>`<details class="alc"><summary>${t("alcH")}</summary><p class="sub">${t("alcP")}</p>
+  <div class="tbl"><table><thead><tr>${t("alcCols").map(c=>`<th scope="col">${c}</th>`).join("")}</tr></thead>
+  <tbody>${ALC().map(r=>`<tr><th scope="row">${r[0]}</th><td class="num">${r[2]}</td><td>${r[1]}</td><td>${r[3]}</td></tr>`).join("")}</tbody></table></div></details>`;
 const optName=id=>{for(const a of AREAS){const o=a.opts.find(o=>o.id===id);if(o) return o.en;}return "";};
 const money=(m)=>lang==="en"
   ? (m>=1000?`${(m/1000).toLocaleString("en-US",{maximumFractionDigits:2})}B`:`${m.toLocaleString("en-US")}M`)
@@ -362,7 +420,7 @@ function snapshot(event){
     category:enL("cat",A.cat),category_other:A.cat==="other"?A.catOther.trim():"",channels:enMany("ch",A.ch),current_gmv:enL("gmv",A.gmv),target_gmv:enL("gmv",A.tgt),skus:enL("sku",A.sku),
     services:enMany("svc",A.svc),
     livestream:has("live")?(A.live==="other"?A.liveOther:enL("live",A.live)):"",
-    videos:has("video")?enL("video",A.video):"",
+    videos:has("video")?(A.video==="other"?A.videoOther:enL("video",A.video)):"",
     media_spend:(has("ads")||has("aff"))?enL("media",A.media):"",
     duration:A.dur==="other"?`${A.durOther} months`:enL("dur",A.dur),
     budget:enL("bud",A.bud),start:enL("start",A.start)};
@@ -396,7 +454,7 @@ function chips(key,group,multi){
     return `<button type="button" class="chip" data-key="${key}" data-id="${id}" data-multi="${multi?1:0}" aria-pressed="${on}">${esc(lang==="en"?en:vi)}</button>`;}).join("")}</div>`;
 }
 /* Free-text / number field revealed when "Other" is picked */
-const OTHER={cat:["catOther","catOtherPh",false],live:["liveOther","liveOtherPh",true],dur:["durOther","durOtherPh",true]};
+const OTHER={cat:["catOther","catOtherPh",false],live:["liveOther","liveOtherPh",true],video:["videoOther","videoOtherPh",true],dur:["durOther","durOtherPh",true]};
 function otherField(key){
   const [l,ph,num]=OTHER[key];
   return `<div class="field other${A[key]==="other"?"":" hidden"}" id="o-${key}"><label for="i-${key}">${t(l)}</label>
@@ -454,7 +512,7 @@ function render(){
       <div class="sum-head"><h3>${t("s1H")}</h3><button class="link" data-go="s1">${t("edit")}</button></div>
       <dl class="sum">${row(t("qCat"),catL())}${row(t("qCh"),many("ch",A.ch))}${row(t("qGmv"),lbl("gmv",A.gmv))}${row(t("qTgt"),lbl("gmv",A.tgt))}${row(t("qSku"),lbl("sku",A.sku))}</dl>
       <div class="sum-head"><h3>${t("s2H")}</h3><button class="link" data-go="s2">${t("edit")}</button></div>
-      <dl class="sum">${row(t("qSvc"),many("svc",A.svc))}${shown("live")?row(t("qLive"),liveL()):""}${shown("video")?row(t("qVideo"),lbl("video",A.video)):""}${shown("media")?row(t("qMedia"),lbl("media",A.media)):""}${row(t("qDur"),durL())}${row(t("qBud"),lbl("bud",A.bud))}${row(t("qStart"),lbl("start",A.start))}</dl>
+      <dl class="sum">${row(t("qSvc"),many("svc",A.svc))}${shown("live")?row(t("qLive"),liveL()):""}${shown("video")?row(t("qVideo"),videoL()):""}${shown("media")?row(t("qMedia"),lbl("media",A.media)):""}${row(t("qDur"),durL())}${row(t("qBud"),lbl("bud",A.bud))}${row(t("qStart"),lbl("start",A.start))}</dl>
       <label class="check"><input type="checkbox" id="cfok" ${A.confirmed?"checked":""}><span>${t("cfOk")}</span></label><div class="err" id="e-cf"></div>
       <div class="actions"><button class="btn ghost" data-go="s2">${t("back")}</button><button class="btn primary" data-next="confirm">${t("see")}</button></div></section>`;
   }
@@ -481,13 +539,17 @@ function render(){
         ${R.to>0?`<div class="budget ${R.fits?"ok":"no"}">${R.fits?t("inBud"):t("outBud")}</div>`:""}
         ${notesH}
       </div>`;
-    const areas=R.all.map(x=>!x.needs.length?`<h3 class="area">${x.a.en}</h3><p class="disc off-area">${t("notNeeded")}</p>`:`<h3 class="area">${x.a.en}</h3><ul class="others">${x.opts.map(r=>{
+    const areas=R.areas.map(x=>`<h3 class="area">${x.a.en}</h3><ul class="others">${x.opts.filter(r=>r.raw>0).map(r=>{
       const pick=x.chosen.includes(r);
-      const sub=r.raw?`${pick?`<em>${t("rsPick")}</em> · `:""}${t("covers")}: ${r.o.covers.map(c=>lbl(x.a.group,c)).join(", ")}`:t("rsNone");
-      return `<li class="${pick?"pick":r.raw?"":"off"}"><div class="nm"><b>${r.o.id} ${r.o.en}</b><span>${sub}</span></div><div class="bar" aria-hidden="true"><i style="width:${r.pct}%"></i></div><div class="p">${r.raw?r.pct+"%":"–"}</div></li>`;
+      return `<li class="${pick?"pick":""}"><div class="nm"><b>${r.o.id} ${r.o.en}</b><span>${pick?`<em>${t("rsPick")}</em> · `:""}${t("covers")}: ${r.o.covers.map(c=>lbl(x.a.group,c)).join(", ")}</span></div><div class="bar" aria-hidden="true"><i style="width:${r.pct}%"></i></div><div class="p">${r.pct}%</div></li>`;
     }).join("")}</ul>`).join("");
+    /* Options the answers did not call for become a light "you might also like" list */
+    const extra=R.all.flatMap(x=>x.opts.filter(r=>r.raw===0).map(r=>({a:x.a,o:r.o})));
+    const explore=extra.length?`<h3 class="areas-h">${t("exH")}</h3><p class="sub">${t("exP")}</p>
+      <ul class="ex-grid">${extra.map(({a,o})=>`<li class="ex"><span class="ex-area">${a.en}</span><b>${o.id} ${o.en}</b><p>${o.pitch}</p><span class="ex-rate">${rateOf(o.id)}</span></li>`).join("")}</ul>`:"";
     h=`${stepsBar()}<section class="panel">${top}
       ${R.areas.length?`<h3 class="areas-h">${t("rsAreas")}</h3>${areas}`:""}
+      ${explore}${alcTable()}
       <p class="disc">${t("disc")}</p>
       <div class="actions"><button class="btn ghost" data-go="confirm">${t("back")}</button><button class="btn primary" data-go="consult">${t("cont")}</button></div></section>`;
   }
@@ -530,7 +592,7 @@ function validate(step){
   if(step==="s2"){
     const r=[need("svc",true)];
     if(shown("live")) r.push(need("live")&&needOther("live"));
-    if(shown("video")) r.push(need("video"));
+    if(shown("video")) r.push(need("video")&&needOther("video"));
     if(shown("media")) r.push(need("media"));
     r.push(need("dur")&&needOther("dur"),need("bud"),need("start"));
     return r.every(Boolean);
