@@ -38,7 +38,8 @@ body{background:var(--page);color:var(--text);font-family:var(--font);font-size:
 button,input{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--magenta);outline-offset:2px;border-radius:6px}
 
-header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--page);border-bottom:1px solid var(--line)}
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--page);background:color-mix(in srgb,var(--page) 82%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+#bg-dots{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--page)}
 .bar-in{max-width:880px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;gap:12px}
 .brand{font-weight:700;letter-spacing:-.02em;font-size:1.15rem;color:var(--ink)}
@@ -169,6 +170,7 @@ footer.site a{color:var(--violet);font-weight:600}
 </style>
 </head>
 <body>
+<canvas id="bg-dots" aria-hidden="true"></canvas>
 <header class="bar"><div class="bar-in">
   <div class="brand">ADA<span id="t-brandsub">Solution Finder</span></div>
 </div></header>
@@ -462,6 +464,56 @@ document.addEventListener("change",e=>{
   if(e.target.id==="wants"){A.wants=e.target.checked;$("#more").classList.toggle("hidden",!A.wants); if(A.wants) setTimeout(()=>$("#email").focus(),0);}
   if(e.target.id==="cfok"){A.confirmed=e.target.checked; if(A.confirmed) $("#e-cf").textContent="";}
 });
+/* ---------- Dot-wave background ----------
+   A dot grid warped by a slow wave field. Dots grow and brighten on the crests and
+   fade in the troughs; colour runs violet → magenta like the brand gradient. */
+(function(){
+  const cv=$("#bg-dots"), ctx=cv&&cv.getContext("2d");
+  if(!ctx) return;
+  const still=matchMedia("(prefers-reduced-motion: reduce)");
+  const BUCKETS=12;
+  let W=0,H=0,gap=22,dark=false,cols=[],raf=0,last=0;
+  const hex=v=>{v=v.trim().replace("#","");return [0,2,4].map(i=>parseInt(v.slice(i,i+2),16));};
+  function readColors(){
+    const s=getComputedStyle(document.documentElement);
+    const a=hex(s.getPropertyValue("--violet")),b=hex(s.getPropertyValue("--magenta")),p=hex(s.getPropertyValue("--page"));
+    dark=(p[0]*.299+p[1]*.587+p[2]*.114)<128;
+    cols=[...Array(BUCKETS)].map((_,i)=>{const f=i/(BUCKETS-1);return `rgb(${a.map((c,j)=>Math.round(c+(b[j]-c)*f)).join(",")})`;});
+  }
+  function size(){
+    const dpr=Math.min(2,window.devicePixelRatio||1);
+    W=innerWidth; H=innerHeight; gap=W<680?18:22;
+    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  function draw(t){
+    const s=t*0.00022, amp=gap*0.7, base=dark?0.1:0.07, gain=dark?0.8:0.5, rMax=dark?1.7:1.5;
+    ctx.clearRect(0,0,W,H);
+    for(let y=-gap;y<H+gap;y+=gap){
+      const ny=y/H;
+      for(let x=-gap;x<W+gap;x+=gap){
+        const nx=x/W;
+        const h=Math.sin(nx*5.2+s*1.3+Math.sin(ny*3.1-s)*1.6)*Math.cos(ny*4.4-s*0.9+nx*1.7);
+        const k=(h+1)/2, e=k*k*(3-2*k);
+        ctx.globalAlpha=base+e*e*gain;
+        ctx.fillStyle=cols[Math.max(0,Math.min(BUCKETS-1,Math.floor((nx*0.7+ny*0.3)*BUCKETS)))];
+        ctx.beginPath();
+        ctx.arc(x+Math.cos(ny*6+s)*amp*h, y+Math.sin(nx*6-s)*amp*h, 0.45+e*rMax, 0, 6.2832);
+        ctx.fill();
+      }
+    }
+  }
+  /* ~30 fps is plenty for a slow drift and keeps the page light */
+  function loop(t){raf=requestAnimationFrame(loop); if(t-last<33) return; last=t; draw(t);}
+  function start(){cancelAnimationFrame(raf); if(still.matches||document.hidden){draw(0);return;} raf=requestAnimationFrame(loop);}
+  readColors(); size(); start();
+  let pending=0;
+  addEventListener("resize",()=>{cancelAnimationFrame(pending);pending=requestAnimationFrame(()=>{size();if(still.matches)draw(0);});});
+  document.addEventListener("visibilitychange",start);
+  still.addEventListener("change",start);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{readColors();if(still.matches)draw(0);});
+})();
+
 render();
 log("page_view");
 </script>
