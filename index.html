@@ -152,6 +152,9 @@ h3.area+.others{margin-top:4px}
 .ex[open] summary::after{content:"−"}
 .ex-area{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .ex b{color:var(--ink)}
+/* Closed cards share one height: long labels end in "…" and show in full once the card is opened */
+.ex .ex-area,.ex b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ex[open] .ex-area,.ex[open] b{white-space:normal}
 .ex p{margin:0 16px;color:var(--muted);font-size:.9rem}
 .ex-rate{display:block;margin:8px 16px 14px;font-size:.82rem;font-weight:600;color:var(--accent)}
 /* Add-ons / ALC rates: collapsed by default */
@@ -444,7 +447,7 @@ const range=(a,b)=>a===b?(lang==="en"?`VND ${money(a)}`:`${money(a)} ₫`):(lang
    ENDPOINT: paste the Apps Script /exec URL after deploying. Empty = logging off.
    LOG_MODE: "all" = record every answer (pilot / acceptance);
              "email_only" = record answers only when the user leaves an email. */
-const CONFIG={ENDPOINT:"https://script.google.com/macros/s/AKfycbwfxDEDNz50l91BFBrm5JaWHbZ02tE8Olho7v_mB_UobVJ46bH2dNQiSECWTb_OeFJy8A/exec",LOG_MODE:"all"};
+const CONFIG={ENDPOINT:"https://script.google.com/macros/s/AKfycbwfxDEDNz50l91BFBrm5JaWHbZ02tE8Olho7v_mB_UobVJ46bH2dNQiSECWTb_OeFJy8A/exec",LOG_MODE:"email_only"};
 const newId=()=>(window.crypto&&crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2));
 let SID=newId();
 const enL=(g,id)=>{const o=O[g].find(x=>x[0]===id);return o?o[1]:"";};
@@ -618,7 +621,7 @@ function render(){
     /* Options the answers did not call for become a light "you might also like" list */
     const extra=R.all.flatMap(x=>x.opts.filter(r=>r.raw===0).map(r=>({a:x.a,o:r.o})));
     const explore=extra.length?`<h3 class="areas-h">${t("exH")}</h3><p class="sub">${t("exP")}</p>
-      <ul class="ex-grid">${extra.map(({a,o})=>`<li><details class="ex"><summary><span class="ex-area">${a.en}</span><b>${o.id} ${o.en}</b></summary><p>${o.pitch}</p><span class="ex-rate">${rateOf(o.id)}</span></details></li>`).join("")}</ul>`:"";
+      <ul class="ex-grid">${extra.map(({a,o})=>`<li><details class="ex"><summary title="${o.id} ${o.en}"><span class="ex-area">${a.en}</span><b>${o.id} ${o.en}</b></summary><p>${o.pitch}</p><span class="ex-rate">${rateOf(o.id)}</span></details></li>`).join("")}</ul>`:"";
     h=`${stepsBar()}<section class="panel">${top}
       ${R.areas.length?`<h3 class="areas-h">${t("rsAreas")}</h3>${areas}`:""}
       ${explore}${alcTable()}
