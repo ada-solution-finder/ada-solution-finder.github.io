@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ADA Solution Finder – prototype</title>
+<script>/* Apply a saved theme before first paint to avoid a flash */try{const m=localStorage.getItem("ada-theme");if(m==="light"||m==="dark")document.documentElement.dataset.theme=m;}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -42,8 +43,13 @@ header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background
 #bg-dots{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--page)}
 .bar-in{max-width:880px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;gap:12px}
-.brand{font-weight:700;letter-spacing:-.02em;font-size:1.15rem;color:var(--ink)}
-.brand span{font-weight:500;color:var(--muted);margin-left:8px;font-size:.95rem}
+.brand{font-weight:700;letter-spacing:-.02em;font-size:1.15rem;color:var(--ink);display:flex;align-items:center;flex-wrap:wrap;gap:4px 12px;min-width:0}
+.brand span{font-weight:500;color:var(--muted);font-size:.95rem}
+.brand .proto{font-family:var(--font);font-size:.72rem;font-weight:600;letter-spacing:.02em;color:var(--violet);background:var(--chip);border-radius:999px;padding:2px 9px}
+.logo{display:inline-flex;color:var(--ink);padding:4px 2px}
+.logo svg{height:26px;width:auto;display:block}
+.theme-btn{flex:none;width:40px;height:40px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:border-color .15s}
+.theme-btn:hover{border-color:var(--violet)}
 
 main{max-width:880px;margin:0 auto;padding:28px 20px 64px}
 .steps{display:flex;gap:6px;margin:0 0 22px;padding:0;list-style:none;flex-wrap:wrap}
@@ -120,8 +126,8 @@ dl.sum dt{color:var(--muted);padding-right:16px}
 .others li{display:grid;grid-template-columns:1fr 150px 56px;gap:16px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
 .others .nm b{display:block;color:var(--ink)}
 .others .nm span{font-size:.88rem;color:var(--muted)}
-.bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--violet);border-radius:8px}
+.others .bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden}
+.others .bar i{display:block;height:100%;background:var(--violet);border-radius:8px}
 .others .p{font-weight:700;text-align:right;color:var(--ink)}
 .disc{font-size:.85rem;color:var(--muted);margin-top:18px}
 
@@ -172,7 +178,29 @@ footer.site a{color:var(--violet);font-weight:600}
 <body>
 <canvas id="bg-dots" aria-hidden="true"></canvas>
 <header class="bar"><div class="bar-in">
-  <div class="brand">ADA<span id="t-brandsub">Solution Finder</span></div>
+  <div class="brand">
+    <a class="logo" href="https://adaglobal.com/" target="_blank" rel="noopener" id="t-logo" aria-label="ADA Global home page">
+      <svg viewBox="0 0 100 47" fill="none" aria-hidden="true">
+        <path d="M15.3839 42.3109C21.7566 42.3109 26.9222 37.1453 26.9222 30.7726C26.9222 24.3999 21.7566 19.2344 15.3839 19.2344C9.01127 19.2344 3.8457 24.3999 3.8457 30.7726C3.8457 37.1453 9.01127 42.3109 15.3839 42.3109Z" stroke="currentColor" stroke-width="7.69231" stroke-miterlimit="10"/>
+        <path d="M26.9219 30.7743C26.9219 37.1469 21.7563 42.3125 15.3836 42.3125C12.2537 42.3125 9.41502 41.0665 7.33646 39.0433" stroke="url(#ada-g0)" stroke-width="7.69231" stroke-miterlimit="10" stroke-linecap="round"/>
+        <path d="M26.9219 30.7734V42.3108" stroke="currentColor" stroke-width="7.69231" stroke-miterlimit="10" stroke-linecap="round"/>
+        <path d="M49.9992 19.2282C56.3719 19.2282 61.5374 24.4417 61.5374 30.7664C61.5374 37.0912 56.3719 42.3047 49.9992 42.3047C43.6265 42.3047 38.4609 37.0912 38.4609 30.7664C38.4609 24.4417 43.6265 19.2282 49.9992 19.2282Z" stroke="currentColor" stroke-width="7.69231" stroke-miterlimit="10"/>
+        <path d="M61.5078 30.7648C61.5078 24.3921 56.3422 19.2266 49.9696 19.2266C46.8397 19.2266 44.001 20.4726 41.9224 22.4957" stroke="url(#ada-g1)" stroke-width="7.69231" stroke-miterlimit="10" stroke-linecap="round"/>
+        <path d="M61.5371 30.7656V3.84307" stroke="currentColor" stroke-width="7.69231" stroke-miterlimit="10" stroke-linecap="round"/>
+        <path d="M84.6144 42.3109C90.9871 42.3109 96.1526 37.105 96.1526 30.7726C96.1526 24.4402 90.9871 19.2344 84.6144 19.2344C78.2417 19.2344 73.0762 24.4402 73.0762 30.7726C73.0762 37.105 78.2417 42.3109 84.6144 42.3109Z" stroke="currentColor" stroke-width="7.69231" stroke-miterlimit="10"/>
+        <path d="M96.123 30.7743C96.123 37.1469 90.9575 42.3125 84.5848 42.3125C81.4549 42.3125 78.6162 41.0665 76.5376 39.0433" stroke="url(#ada-g2)" stroke-width="7.69231" stroke-miterlimit="10" stroke-linecap="round"/>
+        <path d="M96.1523 30.7266V42.2639" stroke="currentColor" stroke-width="7.69231" stroke-miterlimit="10" stroke-linecap="round"/>
+        <!-- Overlap shading: fades from a page-tinted shade to the logo colour so it works on both themes -->
+        <defs>
+          <linearGradient id="ada-g0" x1="26.9219" y1="36.5434" x2="3.8454" y2="37.4087" gradientUnits="userSpaceOnUse"><stop stop-color="#5A5A5A" style="stop-color:color-mix(in srgb,currentColor 40%,var(--page))"/><stop offset="0.75" stop-color="currentColor"/></linearGradient>
+          <linearGradient id="ada-g1" x1="61.5078" y1="24.9957" x2="38.4313" y2="24.1303" gradientUnits="userSpaceOnUse"><stop stop-color="#5A5A5A" style="stop-color:color-mix(in srgb,currentColor 40%,var(--page))"/><stop offset="0.75" stop-color="currentColor"/></linearGradient>
+          <linearGradient id="ada-g2" x1="96.123" y1="36.5434" x2="73.0466" y2="37.4087" gradientUnits="userSpaceOnUse"><stop stop-color="#5A5A5A" style="stop-color:color-mix(in srgb,currentColor 40%,var(--page))"/><stop offset="0.75" stop-color="currentColor"/></linearGradient>
+        </defs>
+      </svg>
+    </a>
+    <span id="t-brandsub">Solution Finder</span><span class="proto">Prototype</span>
+  </div>
+  <button type="button" class="theme-btn" id="theme"></button>
 </div></header>
 <main id="app" aria-live="polite"></main>
 <footer class="site"><span id="t-learn">Learn more about us:</span> <a href="https://adaglobal.com/" target="_blank" rel="noopener">adaglobal.com</a></footer>
@@ -180,7 +208,7 @@ footer.site a{color:var(--violet);font-weight:600}
 <script>
 /* ---------- Copy (EN / VI) ---------- */
 const T={
-en:{brandsub:"Solution Finder",learn:"Learn more about us:",visit:"Visit adaglobal.com",noteAll:"We record your answers anonymously to improve this tool. Your email is stored only if you ask a consultant to contact you.",noteEmail:"Your answers are stored only if you ask a consultant to contact you.",
+en:{brandsub:"Solution Finder",learn:"Learn more about us:",toDark:"Switch to dark mode",toLight:"Switch to light mode",visit:"Visit adaglobal.com",noteAll:"We record your answers anonymously to improve this tool. Your email is stored only if you ask a consultant to contact you.",noteEmail:"Your answers are stored only if you ask a consultant to contact you.",
  steps:["Your brand","Your needs","Confirm","Packages","Consultant"],
  introH:"Explore the ideal package for your enterprise",
  introP:"Answer a few questions about your channels, sales and goals. In about 3 minutes, you’ll get the packages that fit best, with an estimated monthly fee.",
@@ -464,6 +492,24 @@ document.addEventListener("change",e=>{
   if(e.target.id==="wants"){A.wants=e.target.checked;$("#more").classList.toggle("hidden",!A.wants); if(A.wants) setTimeout(()=>$("#email").focus(),0);}
   if(e.target.id==="cfok"){A.confirmed=e.target.checked; if(A.confirmed) $("#e-cf").textContent="";}
 });
+/* ---------- Theme toggle ----------
+   No saved choice = follow the system. A click pins the opposite of what is showing. */
+const root=document.documentElement, sysDark=matchMedia("(prefers-color-scheme: dark)");
+const ICON_SUN='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>';
+const ICON_MOON='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>';
+const themeNow=()=>root.dataset.theme||(sysDark.matches?"dark":"light");
+function paintToggle(){
+  const d=themeNow()==="dark", b=$("#theme");
+  b.innerHTML=d?ICON_SUN:ICON_MOON; b.setAttribute("aria-label",d?t("toLight"):t("toDark")); b.title=b.getAttribute("aria-label");
+}
+$("#theme").addEventListener("click",()=>{
+  const next=themeNow()==="dark"?"light":"dark";
+  root.dataset.theme=next; try{localStorage.setItem("ada-theme",next);}catch(e){}
+  paintToggle();
+});
+sysDark.addEventListener("change",paintToggle);
+paintToggle();
+
 /* ---------- Dot-wave background ----------
    A dot grid warped by a slow wave field. Dots grow and brighten on the crests and
    fade in the troughs; colour runs violet → magenta like the brand gradient. */
@@ -511,7 +557,9 @@ document.addEventListener("change",e=>{
   addEventListener("resize",()=>{cancelAnimationFrame(pending);pending=requestAnimationFrame(()=>{size();if(still.matches)draw(0);});});
   document.addEventListener("visibilitychange",start);
   still.addEventListener("change",start);
-  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{readColors();if(still.matches)draw(0);});
+  const recolor=()=>{readColors();if(still.matches)draw(0);};
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",recolor);
+  new MutationObserver(recolor).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 })();
 
 render();
