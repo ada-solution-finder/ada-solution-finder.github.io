@@ -130,6 +130,8 @@ dl.sum dt{color:var(--muted);padding-right:16px}
 .others .bar i{display:block;height:100%;background:var(--violet);border-radius:8px}
 .others .p{font-weight:700;text-align:right;color:var(--ink)}
 .others li.pick .nm b{color:var(--violet)}
+.others li.pick .bar i{background:linear-gradient(90deg,var(--magenta),var(--violet))}
+.disc.off-area{margin-top:6px}
 .others li.off{opacity:.5}
 .others em{font-style:normal;font-weight:600;color:var(--magenta)}
 .incl li b{color:var(--violet);margin-right:2px}
@@ -238,16 +240,16 @@ en:{brandsub:"Solution Finder",learn:"Learn more about us:",toDark:"Switch to da
  s1H:"About your brand",s1P:"This helps us size the right solution.",
  s2H:"What you need",s2P:"Choose everything that applies.",
  qCat:"Product category",qCh:"Where do you sell today?",qGmv:"Current monthly online sales",qTgt:"Target monthly online sales in 12 months",qSku:"Number of products (SKUs)",
- qSvc:"Services you need",qLive:"Livestream sessions per month",qVideo:"Videos per month",qMedia:"Monthly media spend for ads & affiliate",qDur:"Duration of service",qBud:"Monthly budget for these services",qStart:"When do you want to start?",
+ qSvc:"Services you need",qLive:"Livestream sessions per month (about 2 hours each)",qVideo:"Videos per month",qMedia:"Monthly media spend for ads & affiliate",qDur:"Duration of service",qBud:"Monthly budget for ADA services",qStart:"When do you want to start?",
  catOther:"Please specify your category",catOtherPh:"e.g. Pet care",liveOther:"Number of sessions per month",liveOtherPh:"e.g. 12",durOther:"Duration in months",durOtherPh:"e.g. 18",
  sessions:n=>`${n} sessions`,months:n=>`${n} months`,
  multi:"(choose one or more)",req:"Choose an option to continue.",reqM:"Choose at least one option.",otherErr:"Please tell us a little more.",numErr:"Enter a whole number greater than 0.",
  cfH:"Please check your answers",cfP:"Your solution is calculated from these answers.",edit:"Edit",
  cfOk:"My answers are correct.",cfErr:"Tick the box to confirm your answers.",see:"See my solution",
- rsTag:"Recommended solution",rsLead:n=>`A combination across ${n} service area${n>1?"s":""}, built from your answers.`,rsAreas:"How each option matches your needs",match:"match",
+ rsTag:"Your recommended solution",solH:"A solution built for your brand",notNeeded:"Not part of your request",rsLead:n=>`A combination across ${n} service area${n>1?"s":""}, built from your answers.`,rsAreas:"How each option matches your needs",match:"match",
  rsPick:"Recommended",rsNone:"Not needed for your answers",covers:"Covers",
  fee:"Estimated monthly fee",perM:"per month",oneOff:m=>`+ ${m} one-off dashboard set-up`,inBud:"Within your budget",outBud:"Above your stated budget",
- nInsight:"Data insight consulting is quoted separately.",nMarket:"Store operation on Lazada / Tiki is quoted separately.",nDur:d=>`Planned duration: ${d}.`,
+ nInsight:"Data insight consulting is quoted separately.",nComm:"Includes the store operation fee and a 5% commission on online sales.",nMarket:"Store operation on Lazada / Tiki is quoted separately.",nDur:d=>`Planned duration: ${d}.`,
  custom:"Custom scope",customP:"Your needs call for a tailored scope. A consultant can put it together for you.",
  disc:"Indicative estimate only – final price confirmed by an ADA consultant after scoping.",cont:"Continue",
  csH:"Would you like to talk to an ADA consultant?",csP:"A consultant can review your answers and prepare a tailored proposal.",
@@ -264,10 +266,9 @@ const O={ /* options: [id, label, legacy label – unused] */
  gmv:[["0","Under 500M VND","Dưới 500 triệu"],["1","500M – 2B VND","500 triệu – 2 tỷ"],["2","2B – 10B VND","2 – 10 tỷ"],["3","Over 10B VND","Trên 10 tỷ"]],
  sku:[["0","Under 50","Dưới 50"],["1","50 – 200","50 – 200"],["2","200 – 1,000","200 – 1.000"],["3","Over 1,000","Trên 1.000"]],
  svc:[["live","Livestream","Livestream"],["video","Video production","Sản xuất video"],["ads","Onsite ads","Quảng cáo trên sàn"],["aff","Affiliate & KOL","Affiliate & KOL"],["store","Store operation","Vận hành gian hàng"],["dash","Performance dashboard","Dashboard hiệu quả"],["insight","Data insight consulting","Tư vấn insight dữ liệu"]],
- live:[["4","4","4"],["8","8","8"],["16","16","16"],["30","30","30"],["other","Other","Khác"]],
+ live:[["4","4","4"],["8","8","8"],["16","16","16"],["30","30 (daily)","30 (mỗi ngày)"],["other","Other","Khác"]],
  video:[["4","4","4"],["8","8","8"],["16","16","16"],["30","30","30"]],
- /* id = mid-point in million VND, used for the 10% management fee */
- media:[["30","Under 50M VND","Dưới 50 triệu"],["125","50M – 200M VND","50 – 200 triệu"],["350","200M – 500M VND","200 – 500 triệu"],["600","Over 500M VND","Trên 500 triệu"]],
+ media:[["50","Under 50M VND","Dưới 50 triệu"],["200","50M – 200M VND","50 – 200 triệu"],["500","200M – 500M VND","200 – 500 triệu"],["1000","Over 500M VND","Trên 500 triệu"]],
  dur:[["6","6 months","6 tháng"],["12","1 year","1 năm"],["24","2 years","2 năm"],["other","Other","Khác"],["unsure","Not sure yet","Cần suy nghĩ thêm"]],
  bud:[["100","Under 100M VND","Dưới 100 triệu"],["300","100M – 300M VND","100 – 300 triệu"],["1000","300M – 1B VND","300 triệu – 1 tỷ"],["99999","Over 1B VND","Trên 1 tỷ"]],
  start:[["1","Within 1 month","Trong 1 tháng"],["3","Within 3 months","Trong 3 tháng"],["6","Within 6 months","Trong 6 tháng"],["99","Just exploring","Đang tìm hiểu"]]
@@ -289,8 +290,9 @@ const AREAS=[
   opts:[{id:"D1",en:"Performance dashboard",covers:["dash"]},{id:"D2",en:"Dashboard + insight consultant",covers:["dash","insight"]}]}
 ];
 const RATE={liveHr:[1.5,3],hrsPerSession:2,video:[3,4],store:50,commission:.05,mediaFee:.1,dashSetup:130};
-/* Mid-points stand in for the sales ranges the form asks about */
-const GMV_MID=[300,1200,5000,12000];
+/* Fee FROM uses the low end of each answered range, fee TO the high end */
+const GMV_RANGE=[[0,500],[500,2000],[2000,10000],[10000,20000]];
+const MEDIA_RANGE={"50":[0,50],"200":[50,200],"500":[200,500],"1000":[500,1000]};
 
 /* ---------- State ---------- */
 let lang="en", screen="intro";
@@ -318,7 +320,7 @@ function calibrate(r){
 }
 const sessions=()=>A.live==="other"?(+A.liveOther||0):(+A.live||0);
 function compute(){
-  const areas=AREAS.map(a=>{
+  const all=AREAS.map(a=>{
     const needs=a.need();
     const opts=a.opts.map(o=>{
       const raw=a.pickOne?fit(o.covers,needs):(o.covers.some(c=>needs.includes(c))?1:0);
@@ -326,18 +328,19 @@ function compute(){
     }).sort((x,y)=>y.raw-x.raw);
     const chosen=!needs.length?[]:a.pickOne?[opts[0]]:opts.filter(x=>x.raw>0);
     return {a,needs,opts,chosen,raw:!needs.length?0:a.pickOne?opts[0].raw:1};
-  }).filter(x=>x.needs.length);
+  });
+  const areas=all.filter(x=>x.needs.length);
   const ids=areas.flatMap(x=>x.chosen.map(c=>c.o.id));
   let from=0,to=0;
   if(has("live")){const h=sessions()*RATE.hrsPerSession;from+=h*RATE.liveHr[0];to+=h*RATE.liveHr[1];}
   if(has("video")){const v=+A.video||0;from+=v*RATE.video[0];to+=v*RATE.video[1];}
-  if(has("ads")||has("aff")){const m=(+A.media||0)*RATE.mediaFee;from+=m;to+=m;}
+  if(has("ads")||has("aff")){const m=MEDIA_RANGE[A.media]||[0,0];from+=m[0]*RATE.mediaFee;to+=m[1]*RATE.mediaFee;}
   const st=areas.find(x=>x.a.id==="store");
-  if(st){const f=st.chosen.length*RATE.store+RATE.commission*GMV_MID[+A.gmv||0];from+=f;to+=f;}
+  if(st){const g=GMV_RANGE[+A.gmv]||[0,0],fix=st.chosen.length*RATE.store;from+=fix+RATE.commission*g[0];to+=fix+RATE.commission*g[1];}
   const oneOff=ids.some(id=>id==="D1"||id==="D2")?RATE.dashSetup:0;
   from=Math.round(from); to=Math.round(to);
   const raw=areas.length?areas.reduce((s,x)=>s+x.raw,0)/areas.length:0;
-  return {areas,ids,score:areas.length?Math.max(75,calibrate(raw)):0,from,to,oneOff,fits:+A.bud>=from};
+  return {all,areas,ids,score:areas.length?Math.max(75,calibrate(raw)):0,from,to,oneOff,fits:+A.bud>=from};
 }
 const optName=id=>{for(const a of AREAS){const o=a.opts.find(o=>o.id===id);if(o) return o.en;}return "";};
 const money=(m)=>lang==="en"
@@ -366,6 +369,7 @@ function snapshot(event){
   if(A.svc.length&&A.gmv!==null&&A.bud!==null){
     const R=compute();
     Object.assign(d,{solution:R.ids.join(" + "),match:R.score,price_from_m:R.from,price_to_m:R.to,one_off_m:R.oneOff,
+      all_scores:R.areas.map(x=>x.opts.map(r=>r.o.id+":"+r.pct).join(",")).join("|"),
       within_budget:R.fits?"yes":"no",qualified:(R.fits&&+A.start<=3)?"yes":"no"});
   }
   if(event==="lead"||event==="finish") d.consultant=A.wants?"yes":"no";
@@ -457,6 +461,7 @@ function render(){
   else if(screen==="results"){
     const R=compute(); const C=2*Math.PI*80;
     const notes=[];
+    if(R.areas.some(x=>x.a.id==="store")) notes.push(t("nComm"));
     if(has("insight")) notes.push(t("nInsight"));
     if(has("store")&&A.ch.some(c=>c==="lazada"||c==="tiki")) notes.push(t("nMarket"));
     if(A.dur&&A.dur!=="unsure") notes.push(t("nDur")(durL()));
@@ -469,14 +474,14 @@ function render(){
           <circle class="val" cx="90" cy="90" r="80" fill="none" stroke="var(--magenta)" stroke-width="14" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-target="${C*(1-R.score/100)}"/></svg>
           <div class="pct"><div>${R.score}%<small>${t("match")}</small></div></div>
         </div>
-        <h2>${R.ids.join(" + ")}</h2><p class="best">${t("rsLead")(R.areas.length)}</p>
+        <h2>${t("solH")}</h2><p class="best">${t("rsLead")(R.areas.length)}</p>
         <ul class="incl">${R.ids.map(id=>`<li><b>${id}</b> ${optName(id)}</li>`).join("")}</ul>
         ${R.to>0?`<div class="fee">${range(R.from,R.to)}<small>${t("fee")}, ${t("perM")}</small></div>`:""}
         ${R.oneOff?`<div class="oneoff">${t("oneOff")(range(R.oneOff,R.oneOff))}</div>`:""}
         ${R.to>0?`<div class="budget ${R.fits?"ok":"no"}">${R.fits?t("inBud"):t("outBud")}</div>`:""}
         ${notesH}
       </div>`;
-    const areas=R.areas.map(x=>`<h3 class="area">${x.a.en}</h3><ul class="others">${x.opts.map(r=>{
+    const areas=R.all.map(x=>!x.needs.length?`<h3 class="area">${x.a.en}</h3><p class="disc off-area">${t("notNeeded")}</p>`:`<h3 class="area">${x.a.en}</h3><ul class="others">${x.opts.map(r=>{
       const pick=x.chosen.includes(r);
       const sub=r.raw?`${pick?`<em>${t("rsPick")}</em> · `:""}${t("covers")}: ${r.o.covers.map(c=>lbl(x.a.group,c)).join(", ")}`:t("rsNone");
       return `<li class="${pick?"pick":r.raw?"":"off"}"><div class="nm"><b>${r.o.id} ${r.o.en}</b><span>${sub}</span></div><div class="bar" aria-hidden="true"><i style="width:${r.pct}%"></i></div><div class="p">${r.raw?r.pct+"%":"–"}</div></li>`;
