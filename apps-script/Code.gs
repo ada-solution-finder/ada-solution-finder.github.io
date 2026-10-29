@@ -10,13 +10,15 @@
 const BD_EMAIL = "";
 
 /* Column order of the Events and Responses tabs (Tech Implementation, section D,
-   plus category_other, duration, one_off_m and consent_time). */
+   plus category_other, duration, one_off_m, consent_time and the booked call).
+   New columns go at the end so existing rows keep their place. */
 const COLUMNS = [
   "server_time", "session_id", "event", "lang", "client_time",
   "category", "category_other", "channels", "current_gmv", "target_gmv", "skus",
   "services", "livestream", "videos", "media_budget", "duration", "budget", "start",
   "top_package", "top_score", "all_scores", "price_from_m", "price_to_m", "one_off_m",
-  "within_budget", "qualified", "consultant", "email", "consent", "consent_time"
+  "within_budget", "qualified", "consultant", "email", "consent", "consent_time",
+  "call_date", "call_time"
 ];
 const EVENTS = ["page_view", "start", "brand_done", "needs_done", "results_shown", "finish", "lead"];
 const MAX_LEN = 500;
@@ -34,8 +36,11 @@ function doPost(e) {
     if (d.event === "lead") {
       if (!EMAIL_RE.test(String(d.email || "")) || String(d.email).length > 254) return reply_(false, "bad email");
       if (d.consent !== "yes") return reply_(false, "no consent");
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(String(d.call_date || ""))) d.call_date = "";
+      if (!/^\d{2}:\d{2}$/.test(String(d.call_time || ""))) d.call_time = "";
     } else {
       delete d.email;                                          // e-mail is kept only for consented consultant requests
+      delete d.call_date; delete d.call_time;
     }
 
     const cache = CacheService.getScriptCache();
@@ -83,6 +88,8 @@ function tab_(ss, name) {
     sh = ss.insertSheet(name);
     sh.getRange(1, 1, 1, COLUMNS.length).setValues([COLUMNS]).setFontWeight("bold");
     sh.setFrozenRows(1);
+  } else if (sh.getLastColumn() < COLUMNS.length) {
+    sh.getRange(1, 1, 1, COLUMNS.length).setValues([COLUMNS]).setFontWeight("bold");   // columns added since the tab was made
   }
   return sh;
 }
@@ -98,9 +105,11 @@ function clean_(v) {
 function alertBd_(d) {
   if (!BD_EMAIL) return;
   const price = d.price_to_m ? "VND " + d.price_from_m + "M – " + d.price_to_m + "M / month" : "price on scoping";
+  const call = d.call_date ? d.call_date + " " + d.call_time + " (GMT+7)" : "";
   const lines = [
     "New consultant request from ADA Solution Finder.", "",
     "E-mail: " + d.email,
+    "Requested call: " + (call || "–"),
     "Recommended: " + (d.top_package || "custom scope") + " (" + (d.top_score || "–") + "% match)",
     "Estimated fee: " + price + (d.one_off_m ? " + VND " + d.one_off_m + "M one-off set-up" : ""),
     "Within budget: " + (d.within_budget || "–") + " · Qualified: " + (d.qualified || "–"), "",
@@ -116,7 +125,7 @@ function alertBd_(d) {
   MailApp.sendEmail({
     to: BD_EMAIL,
     replyTo: d.email,
-    subject: "[Solution Finder] " + (d.top_package || "Custom scope") + " · " + price,
+    subject: "[Solution Finder] " + (d.top_package || "Custom scope") + " · " + price + (call ? " · Call " + call : ""),
     body: lines.join("\n")
   });
 }

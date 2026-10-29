@@ -9,10 +9,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* Design tokens – approximated ADA palette. Replace with exact brand hex values when the design team delivers the UI. */
+/* Design tokens – approximated from adaglobal.com (navy, cyan, blue). Replace with exact brand hex values when the design team delivers the UI.
+   --accent: selected states, links, bars · --accent-2: second accent, gradient start · --cta-*: primary button (ADA cyan in both themes). */
 :root{
-  --ink:#1B1540; --violet:#5A3FD8; --magenta:#E0357F; --surface:#FFFFFF; --page:#F4F2FB;
-  --line:#DCD6F0; --text:#221D3B; --muted:#62597F; --chip:#EFEBFC; --ok:#178A5B; --warn:#B4541A;
+  --ink:#0A1733; --accent:#2F50D8; --accent-2:#0B7FA3; --on-accent:#FFFFFF; --surface:#FFFFFF; --page:#F2F6FC;
+  --line:#D5DFEE; --text:#14203A; --muted:#55627D; --chip:#E7F0FB; --ok:#178A5B; --warn:#B4541A; --danger:#C2334D;
+  --cta-a:#3FE0FF; --cta-b:#8FB7FF; --on-cta:#04132B;
   --radius-lg:22px; --radius-sm:10px;
   --font:Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-head:"Spline Sans Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
@@ -22,14 +24,14 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --ink:#EDE9FF; --violet:#9C86FF; --magenta:#FF6FA8; --surface:#1C1833; --page:#120F24;
-    --line:#352E58; --text:#ECE9F7; --muted:#AFA7CC; --chip:#2A2448; --ok:#4CC793; --warn:#F09A5B;
+    --ink:#EAF4FF; --accent:#3FE0FF; --accent-2:#8C8CFF; --on-accent:#04132B; --surface:#0A1A38; --page:#031027;
+    --line:#1E3155; --text:#E3ECF8; --muted:#9AAAC6; --chip:#12254A; --ok:#4CC793; --warn:#F09A5B; --danger:#FF7A8A;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"]{
-  --ink:#EDE9FF; --violet:#9C86FF; --magenta:#FF6FA8; --surface:#1C1833; --page:#120F24;
-  --line:#352E58; --text:#ECE9F7; --muted:#AFA7CC; --chip:#2A2448; --ok:#4CC793; --warn:#F09A5B;
+  --ink:#EAF4FF; --accent:#3FE0FF; --accent-2:#8C8CFF; --on-accent:#04132B; --surface:#0A1A38; --page:#031027;
+  --line:#1E3155; --text:#E3ECF8; --muted:#9AAAC6; --chip:#12254A; --ok:#4CC793; --warn:#F09A5B; --danger:#FF7A8A;
   color-scheme: dark;
 }
 *,*::before,*::after{box-sizing:inherit}
@@ -37,7 +39,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 html,body{margin:0}
 body{background:var(--page);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.55;min-height:100vh}
 button,input{font:inherit;color:inherit}
-:focus-visible{outline:3px solid var(--magenta);outline-offset:2px;border-radius:6px}
+:focus-visible{outline:3px solid var(--accent-2);outline-offset:2px;border-radius:6px}
 /* Headings get focus on screen change for screen readers; no ring needed there */
 [tabindex="-1"]:focus{outline:none}
 
@@ -47,23 +49,23 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .bar-in{max-width:880px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;gap:12px}
 .brand{font-weight:700;letter-spacing:-.02em;font-size:1.15rem;color:var(--ink);display:flex;align-items:center;flex-wrap:wrap;gap:4px 12px;min-width:0}
 .brand span{font-weight:500;color:var(--muted);font-size:.95rem}
-.brand .proto{font-family:var(--font);font-size:.72rem;font-weight:600;letter-spacing:.02em;color:var(--violet);background:var(--chip);border-radius:999px;padding:2px 9px}
+.brand .proto{font-family:var(--font);font-size:.72rem;font-weight:600;letter-spacing:.02em;color:var(--accent);background:var(--chip);border-radius:999px;padding:2px 9px}
 .logo{display:inline-flex;color:var(--ink);padding:4px 2px}
 .logo svg{height:26px;width:auto;display:block}
 .theme-btn{flex:none;width:40px;height:40px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:border-color .15s}
-.theme-btn:hover{border-color:var(--violet)}
+.theme-btn:hover{border-color:var(--accent)}
 
 main{max-width:880px;margin:0 auto;padding:28px 20px 64px}
 .steps{display:flex;gap:6px;margin:0 0 22px;padding:0;list-style:none;flex-wrap:wrap}
 .steps li{flex:1 1 0;min-width:90px;font-size:.8rem;color:var(--muted)}
 .steps li::before{content:"";display:block;height:4px;border-radius:4px;background:var(--line);margin-bottom:6px}
-.steps li.done::before,.steps li.now::before{background:var(--violet)}
+.steps li.done::before,.steps li.now::before{background:var(--accent)}
 .steps li.now{color:var(--text);font-weight:600}
 
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:32px}
 h1{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.15;letter-spacing:-.02em;margin:0 0 14px;color:var(--ink);font-weight:700;max-width:20ch}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
-  h1{background:linear-gradient(90deg,var(--magenta),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;width:fit-content}
+  h1{background:linear-gradient(90deg,var(--accent-2),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent;width:fit-content}
 }
 h1,h2,h3,.brand{font-family:var(--font-head)}
 h2{font-size:1.5rem;line-height:1.2;letter-spacing:-.015em;margin:0 0 6px;color:var(--ink);font-weight:700}
@@ -73,13 +75,13 @@ p.lead{font-size:1.1rem;color:var(--muted);max-width:56ch;margin:0 0 24px}
 .q .hint{font-weight:400;color:var(--muted);font-size:.88rem;margin-left:6px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;cursor:pointer;font-size:.95rem;transition:background .15s,border-color .15s}
-.chip:hover{border-color:var(--violet)}
-.chip[aria-pressed="true"]{background:var(--violet);border-color:var(--violet);color:#fff}
-.err{color:var(--magenta);font-size:.88rem;margin-top:6px;min-height:1em}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.err{color:var(--danger);font-size:.88rem;margin-top:6px;min-height:1em}
 
 .actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:32px;flex-wrap:wrap}
 .btn{border:0;border-radius:999px;padding:13px 26px;font-weight:600;cursor:pointer;font-size:1rem}
-.btn.primary{background:linear-gradient(90deg,var(--magenta),var(--violet));color:#fff}
+.btn.primary{background:linear-gradient(90deg,var(--cta-a),var(--cta-b));color:var(--on-cta)}
 .btn.primary:hover{filter:brightness(1.07)}
 .btn.ghost{background:none;color:var(--muted);padding-left:4px}
 .btn.ghost:hover{color:var(--text)}
@@ -91,8 +93,8 @@ p.lead{font-size:1.1rem;color:var(--muted);max-width:56ch;margin:0 0 24px}
 /* Understand: a plain list with small outlined markers joined by a thin gradient rule */
 .needs{margin:4px 0 0;padding:0;list-style:none}
 .needs li{position:relative;display:grid;grid-template-columns:34px 1fr;gap:16px;align-items:start;padding:10px 0 18px}
-.needs li:not(:last-child)::after{content:"";position:absolute;left:16px;top:50px;bottom:-4px;width:2px;border-radius:2px;background:linear-gradient(var(--violet),var(--magenta));opacity:.3}
-.needs .ic{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;color:var(--violet);background:var(--surface)}
+.needs li:not(:last-child)::after{content:"";position:absolute;left:16px;top:50px;bottom:-4px;width:2px;border-radius:2px;background:linear-gradient(var(--accent),var(--accent-2));opacity:.3}
+.needs .ic{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;color:var(--accent);background:var(--surface)}
 .needs .ic svg{width:16px;height:16px}
 .needs b{display:block;color:var(--ink);margin-top:5px}
 .needs span{color:var(--muted)}
@@ -103,9 +105,9 @@ dl.sum dt,dl.sum dd{padding:11px 0;border-bottom:1px solid var(--line);margin:0}
 dl.sum dt{color:var(--muted);padding-right:16px}
 .sum-head{display:flex;justify-content:space-between;align-items:baseline;margin-top:22px}
 .sum-head h3{margin:0;font-size:1.05rem;color:var(--ink)}
-.link{background:none;border:0;color:var(--violet);font-weight:600;cursor:pointer;padding:4px}
+.link{background:none;border:0;color:var(--accent);font-weight:600;cursor:pointer;padding:4px}
 .check{display:flex;gap:12px;align-items:flex-start;margin-top:24px;cursor:pointer}
-.check input{width:20px;height:20px;margin-top:3px;accent-color:var(--violet);flex:none}
+.check input{width:20px;height:20px;margin-top:3px;accent-color:var(--accent);flex:none}
 
 /* Results */
 .top{text-align:center;padding:10px 0 26px;border-bottom:1px solid var(--line)}
@@ -113,7 +115,7 @@ dl.sum dt{color:var(--muted);padding-right:16px}
 .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
 .ring .pct{position:absolute;inset:0;display:grid;place-items:center;font-weight:700;font-size:2.6rem;color:var(--ink);letter-spacing:-.03em}
 .ring .pct small{display:block;font-size:.8rem;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:-6px}
-.top .tag{display:inline-block;background:var(--chip);color:var(--violet);border-radius:999px;padding:4px 12px;font-size:.82rem;font-weight:600}
+.top .tag{display:inline-block;background:var(--chip);color:var(--accent);border-radius:999px;padding:4px 12px;font-size:.82rem;font-weight:600}
 .top h2{font-size:clamp(1.6rem,4vw,2.1rem);margin:12px 0 4px}
 .top .best{color:var(--muted);margin:0 auto 14px;max-width:52ch}
 .fee{font-size:1.35rem;font-weight:700;color:var(--ink)}
@@ -127,12 +129,12 @@ dl.sum dt{color:var(--muted);padding-right:16px}
 .others .nm b{display:block;color:var(--ink)}
 .others .nm span{font-size:.88rem;color:var(--muted)}
 .others .bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden}
-.others .bar i{display:block;height:100%;background:var(--violet);border-radius:8px}
+.others .bar i{display:block;height:100%;background:var(--accent);border-radius:8px}
 .others .p{font-weight:700;text-align:right;color:var(--ink)}
-.others li.pick .nm b{color:var(--violet)}
-.others li.pick .bar i{background:linear-gradient(90deg,var(--magenta),var(--violet))}
-.others em{font-style:normal;font-weight:600;color:var(--magenta)}
-.incl li b{color:var(--violet);margin-right:2px}
+.others li.pick .nm b{color:var(--accent)}
+.others li.pick .bar i{background:linear-gradient(90deg,var(--accent-2),var(--accent))}
+.others em{font-style:normal;font-weight:600;color:var(--accent-2)}
+.incl li b{color:var(--accent);margin-right:2px}
 .oneoff{font-size:.92rem;color:var(--muted);margin-top:6px}
 .notes{list-style:none;padding:0;margin:14px auto 0;max-width:52ch;font-size:.88rem;color:var(--muted)}
 .notes li+li{margin-top:2px}
@@ -145,12 +147,12 @@ h3.area+.others{margin-top:4px}
 .ex-area{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .ex b{color:var(--ink)}
 .ex p{margin:0;color:var(--muted);font-size:.9rem;flex:1}
-.ex-rate{font-size:.82rem;font-weight:600;color:var(--violet);margin-top:6px}
+.ex-rate{font-size:.82rem;font-weight:600;color:var(--accent);margin-top:6px}
 /* Add-ons / ALC rates: collapsed by default */
 details.alc{margin-top:26px;border:1px solid var(--line);border-radius:14px;padding:0 16px}
 details.alc summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;font-family:var(--font-head);font-weight:700;color:var(--ink)}
 details.alc summary::-webkit-details-marker{display:none}
-details.alc summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--violet)}
+details.alc summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--accent)}
 details.alc[open] summary::after{content:"−"}
 details.alc .sub{margin:0}
 .tbl{overflow-x:auto;margin:10px 0 16px}
@@ -178,12 +180,35 @@ details.alc .sub{margin:0}
 .field{margin-top:18px;max-width:420px}
 .field label{display:block;font-weight:600;margin-bottom:6px}
 .field input{width:100%;border:1.5px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px;background:var(--surface)}
-.field input:focus{border-color:var(--violet);outline:none}
+.field input:focus{border-color:var(--accent);outline:none}
 .field.other{margin-top:12px;max-width:320px}
 .field.other label{font-weight:500;font-size:.9rem;color:var(--muted)}
 .reveal{overflow:hidden}
 .hidden{display:none}
 .hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+
+/* Booking */
+.book{margin-top:28px;padding-top:22px;border-top:1px solid var(--line)}
+.book-h{margin:0;font-size:1.15rem;color:var(--ink)}
+.book-grid{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:28px;margin-top:16px;align-items:start}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.cal-head b{color:var(--ink);font-weight:600}
+.cal-nav{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-size:1.15rem;line-height:1}
+.cal-nav:not(:disabled):hover{border-color:var(--accent)}
+.cal-nav:disabled{opacity:.35;cursor:default}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}
+.cal-grid .wd{font-size:.75rem;font-weight:600;color:var(--muted);padding:4px 0}
+.day{width:100%;max-width:40px;height:40px;margin:0 auto;padding:0;border:0;border-radius:50%;background:none;cursor:pointer;font-size:.92rem;color:var(--text);font-variant-numeric:tabular-nums}
+.day:not(:disabled):hover{background:var(--chip)}
+.day:disabled{color:var(--muted);opacity:.4;cursor:default}
+.day.on{background:var(--accent);color:var(--on-accent);font-weight:700}
+.slots-h{margin:4px 0 12px;font-weight:600;color:var(--ink)}
+.slot-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.slot{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:11px 10px;cursor:pointer;font-size:1rem;font-variant-numeric:tabular-nums;transition:border-color .15s,background .15s}
+.slot:hover{border-color:var(--accent)}
+.slot.on{background:var(--cta-a);border-color:var(--cta-a);color:var(--on-cta);font-weight:700}
+.booked{display:inline-block;margin:18px 0 0;background:var(--ink);color:var(--surface);border-radius:12px;padding:10px 16px;font-weight:600}
+@media (max-width:680px){.book-grid{grid-template-columns:minmax(0,1fr);gap:20px}}
 
 /* Done */
 .done{text-align:center;padding:24px 0}
@@ -193,7 +218,7 @@ details.alc .sub{margin:0}
 
 .intro .note{font-size:.85rem;color:var(--muted);max-width:52ch;margin:-12px 0 20px}
 footer.site{max-width:880px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:.92rem}
-footer.site a{color:var(--violet);font-weight:600}
+footer.site a{color:var(--accent);font-weight:600}
 .done .links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .done a.btn{text-decoration:none;display:inline-block}
 @media (max-width:680px){
@@ -290,7 +315,9 @@ en:{brandsub:"Solution Finder",learn:"Learn more about us:",toDark:"Switch to da
  emailErr:"Enter a valid email so the consultant can reach you.",consent:"I agree that ADA may contact me about this request and store my answers for that purpose.",
  consentErr:"Tick the box so we can contact you.",finish:"Finish",
  doneH:"All done",doneYesH:"We’ve received your request",
- doneYes:e=>`Thank you for exploring ADA Solution Finder.<br>One of our solution consultants will personally review your answers and reach out to <b>${e}</b> within one business day. We look forward to helping your brand grow.`,
+ bkH:"Book a call with your ADA consultant",bkP:"Pick a day, then a time. Times are in Vietnam time (GMT+7); your consultant confirms by e-mail.",
+ bkTime:"Choose a time",bkPickDay:"Pick a day first.",bkPrev:"Previous month",bkNext:"Next month",bkErr:"Choose a day and a time for your call.",
+ doneYes:(e,slot)=>`Thank you for exploring ADA Solution Finder.<br>Your call is booked for <b>${slot}</b> (Vietnam time, GMT+7). One of our solution consultants will personally review your answers and reach out to <b>${e}</b> within one business day to confirm. We look forward to helping your brand grow.`,
  doneNo:"Thanks for using Solution Finder. You can come back any time to explore your options.",home:"Back to home"},
 };
 const O={ /* options: [id, label, legacy label – unused] */
@@ -332,7 +359,7 @@ const MEDIA_RANGE={"50":[0,50],"200":[50,200],"500":[200,500],"1000":[500,1000]}
 
 /* ---------- State ---------- */
 let lang="en", screen="intro";
-const blank=()=>({cat:null,catOther:"",ch:[],gmv:null,tgt:null,sku:null,svc:[],live:null,liveOther:"",video:null,videoOther:"",media:null,dur:null,durOther:"",bud:null,start:null,confirmed:false,wants:false,email:"",consent:false,consentTime:""});
+const blank=()=>({cat:null,catOther:"",ch:[],gmv:null,tgt:null,sku:null,svc:[],live:null,liveOther:"",video:null,videoOther:"",media:null,dur:null,durOther:"",bud:null,start:null,confirmed:false,wants:false,email:"",consent:false,consentTime:"",callDate:"",callTime:""});
 const A=blank();
 const STEP_OF={s1:0,s2:1,confirm:2,results:3,consult:4};
 const $=s=>document.querySelector(s);
@@ -432,7 +459,7 @@ function snapshot(event){
       within_budget:R.fits?"yes":"no",qualified:(R.fits&&+A.start<=3)?"yes":"no"});
   }
   if(event==="lead"||event==="finish") d.consultant=A.wants?"yes":"no";
-  if(event==="lead"){d.email=A.email;d.consent=A.consent?"yes":"no";d.consent_time=A.consentTime;d.website=($("#website")||{}).value||"";}
+  if(event==="lead"){d.email=A.email;d.consent=A.consent?"yes":"no";d.consent_time=A.consentTime;d.call_date=A.callDate;d.call_time=A.callTime;d.website=($("#website")||{}).value||"";}
   return d;
 }
 function log(event){
@@ -464,6 +491,44 @@ function otherField(key){
 function q(key,group,label,multi,hide){
   return `<fieldset class="q${hide?" hidden":""}" id="q-${key}"><legend>${label}${multi?`<span class="hint">${t("multi")}</span>`:""}</legend>${chips(key,group,multi)}${key in OTHER?otherField(key):""}<div class="err" id="e-${key}"></div></fieldset>`;
 }
+/* Consultant booking: weekdays from tomorrow up to BOOK_DAYS ahead, fixed slots in Vietnam time.
+   Not linked to a live calendar – BD confirms the slot by e-mail. */
+const SLOTS=["09:00","10:00","14:00","16:00"], BOOK_DAYS=45;
+let calView=null;                                   // month shown in the calendar: {y, m}
+const ymd=(y,m,d)=>`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+const fmtDay=k=>{const [y,m,d]=k.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});};
+function bookWindow(){const a=new Date();a.setHours(0,0,0,0);a.setDate(a.getDate()+1);const b=new Date(a);b.setDate(b.getDate()+BOOK_DAYS-1);return [a,b];}
+const bookable=(dt,[a,b])=>dt>=a&&dt<=b&&dt.getDay()!==0&&dt.getDay()!==6;
+function bookingHtml(){
+  const win=bookWindow(),[a,b]=win;
+  if(!calView){const s=A.callDate&&A.callDate.split("-").map(Number);calView=s?{y:s[0],m:s[1]-1}:{y:a.getFullYear(),m:a.getMonth()};}
+  const {y,m}=calView, first=new Date(y,m,1), pad=(first.getDay()+6)%7, days=new Date(y,m+1,0).getDate();
+  const canPrev=first>new Date(a.getFullYear(),a.getMonth(),1), canNext=new Date(y,m+1,1)<=b;
+  let cells="<span></span>".repeat(pad);
+  for(let d=1;d<=days;d++){
+    const dt=new Date(y,m,d),k=ymd(y,m,d),on=A.callDate===k;
+    cells+=`<button type="button" class="day${on?" on":""}" data-day="${k}" aria-pressed="${on}" aria-label="${dt.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"})}"${bookable(dt,win)?"":" disabled"}>${d}</button>`;
+  }
+  const slots=A.callDate
+    ? `<div class="slot-list">${SLOTS.map(s=>`<button type="button" class="slot${A.callTime===s?" on":""}" data-slot="${s}" aria-pressed="${A.callTime===s}">${A.callTime===s?"✓ ":""}${s}</button>`).join("")}</div>`
+    : `<p class="sub">${t("bkPickDay")}</p>`;
+  return `<h3 class="book-h">${t("bkH")}</h3><p class="sub">${t("bkP")}</p>
+    <div class="book-grid">
+      <div class="cal">
+        <div class="cal-head"><button type="button" class="cal-nav" data-cal="-1" aria-label="${t("bkPrev")}"${canPrev?"":" disabled"}>‹</button>
+          <b>${first.toLocaleDateString("en-GB",{month:"long",year:"numeric"})}</b>
+          <button type="button" class="cal-nav" data-cal="1" aria-label="${t("bkNext")}"${canNext?"":" disabled"}>›</button></div>
+        <div class="cal-grid">${["Mo","Tu","We","Th","Fr","Sa","Su"].map(w=>`<span class="wd">${w}</span>`).join("")}${cells}</div>
+      </div>
+      <div class="slots"><p class="slots-h">${A.callDate?fmtDay(A.callDate):t("bkTime")}</p>${slots}</div>
+    </div>
+    ${A.callDate&&A.callTime?`<p class="booked" role="status">✓ ${fmtDay(A.callDate)} · ${A.callTime} (GMT+7)</p>`:""}
+    <div class="err" id="e-book"></div>`;
+}
+function paintBook(focusSel){
+  $("#book").innerHTML=bookingHtml();
+  const f=focusSel&&$("#book "+focusSel); if(f) f.focus();
+}
 /* Conditional questions on step 2, keyed by the services that switch them on */
 const SHOW_IF={live:["live"],video:["video"],media:["ads","aff"]};
 const shown=k=>SHOW_IF[k].some(has);
@@ -485,8 +550,8 @@ function render(){
         <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="none" stroke="var(--line)" stroke-width="2"/>
         <circle cx="100" cy="100" r="64" fill="none" stroke="var(--line)" stroke-width="2"/>
         <circle cx="100" cy="100" r="36" fill="var(--chip)"/>
-        <circle class="arc arc-a" cx="100" cy="100" r="92" fill="none" stroke="var(--violet)" stroke-width="8" stroke-linecap="round" stroke-dasharray="420 600"/>
-        <circle class="arc arc-b" cx="100" cy="100" r="64" fill="none" stroke="var(--magenta)" stroke-width="8" stroke-linecap="round" stroke-dasharray="230 500"/>
+        <circle class="arc arc-a" cx="100" cy="100" r="92" fill="none" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" stroke-dasharray="420 600"/>
+        <circle class="arc arc-b" cx="100" cy="100" r="64" fill="none" stroke="var(--accent-2)" stroke-width="8" stroke-linecap="round" stroke-dasharray="230 500"/>
         <svg x="72" y="86.85" width="56" height="26.3" viewBox="0 0 100 47" style="color:var(--ink)"><use href="#ada-logo"/></svg></svg>
       </div></section>`;
   }
@@ -530,7 +595,7 @@ function render(){
       : `<div class="top"><span class="tag">${t("rsTag")}</span>
         <div class="ring" role="img" aria-label="${R.score}% ${t("match")}">
           <svg viewBox="0 0 180 180"><circle cx="90" cy="90" r="80" fill="none" stroke="var(--line)" stroke-width="14"/>
-          <circle class="val" cx="90" cy="90" r="80" fill="none" stroke="var(--magenta)" stroke-width="14" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-target="${C*(1-R.score/100)}"/></svg>
+          <circle class="val" cx="90" cy="90" r="80" fill="none" stroke="var(--accent-2)" stroke-width="14" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-target="${C*(1-R.score/100)}"/></svg>
           <div class="pct"><div>${R.score}%<small>${t("match")}</small></div></div>
         </div>
         <h2>${t("solH")}</h2><p class="best">${t("rsLead")(R.areas.length)}</p>
@@ -561,12 +626,13 @@ function render(){
         <div class="field"><label for="email">${t("email")} *</label><input id="email" type="email" inputmode="email" autocomplete="email" required placeholder="${t("emailPh")}" value="${esc(A.email)}"><div class="err" id="e-email"></div></div>
         <label class="check"><input type="checkbox" id="consent" ${A.consent?"checked":""}><span>${t("consent")}</span></label><div class="err" id="e-consent"></div>
         <div class="hp" aria-hidden="true"><label>Website <input id="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+        <div class="book" id="book">${bookingHtml()}</div>
       </div>
       <div class="actions"><button class="btn ghost" data-go="results">${t("back")}</button><button class="btn primary" data-next="consult">${t("finish")}</button></div></section>`;
   }
   else if(screen==="done"){
     h=`<section class="panel done"><div class="mark"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
-      <h1>${A.wants?t("doneYesH"):t("doneH")}</h1><p>${A.wants?T[lang].doneYes(esc(A.email)):t("doneNo")}</p>
+      <h1>${A.wants?t("doneYesH"):t("doneH")}</h1><p>${A.wants?T[lang].doneYes(esc(A.email),`${fmtDay(A.callDate)}, ${A.callTime}`):t("doneNo")}</p>
       <div class="links"><button class="btn primary" data-reset="1">${t("home")}</button><a class="btn ghost" href="https://adaglobal.com/" target="_blank" rel="noopener">${t("visit")}</a></div></section>`;
   }
   app.innerHTML=h;
@@ -603,9 +669,9 @@ function validate(step){
   if(step==="consult"){
     if(!A.wants) return true;
     A.email=$("#email").value.trim(); A.consent=$("#consent").checked; A.consentTime=A.consent?new Date().toISOString():"";
-    const okE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(A.email); const okC=A.consent;
-    $("#e-email").textContent=okE?"":t("emailErr"); $("#e-consent").textContent=okC?"":t("consentErr");
-    if(!okE) $("#email").focus(); return okE&&okC;
+    const okE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(A.email); const okC=A.consent; const okB=!!(A.callDate&&A.callTime);
+    $("#e-email").textContent=okE?"":t("emailErr"); $("#e-consent").textContent=okC?"":t("consentErr"); $("#e-book").textContent=okB?"":t("bkErr");
+    if(!okE) $("#email").focus(); return okE&&okC&&okB;
   }
   return true;
 }
@@ -629,13 +695,19 @@ document.addEventListener("click",e=>{
     const er=document.getElementById("e-"+k); if(er) er.textContent="";
     return;
   }
+  const day=e.target.closest("[data-day]");
+  if(day){A.callDate=day.dataset.day;A.callTime="";paintBook(".slot");return;}
+  const sl=e.target.closest("[data-slot]");
+  if(sl){A.callTime=sl.dataset.slot;paintBook(".slot.on");return;}
+  const nav=e.target.closest("[data-cal]");
+  if(nav){const d=new Date(calView.y,calView.m+ +nav.dataset.cal,1);calView={y:d.getFullYear(),m:d.getMonth()};paintBook(`[data-cal="${nav.dataset.cal}"]:not(:disabled)`);return;}
   const g=e.target.closest("[data-go]"); if(g){if(g.dataset.ev) log(g.dataset.ev); go(g.dataset.go);return;}
   const n=e.target.closest("[data-next]"); if(n){const s=n.dataset.next; if(validate(s)){
     if(s==="s1") log("brand_done"); else if(s==="s2") log("needs_done"); else if(s==="consult") log(A.wants?"lead":"finish");
     go(NEXT[s]);
     if(s==="confirm") log("results_shown");
   } return;}
-  const r=e.target.closest("[data-reset]"); if(r){Object.assign(A,blank());SID=newId();go("intro");log("page_view");return;}
+  const r=e.target.closest("[data-reset]"); if(r){Object.assign(A,blank());calView=null;SID=newId();go("intro");log("page_view");return;}
 });
 document.addEventListener("input",e=>{
   const k=e.target.dataset.other; if(!k) return;
@@ -668,7 +740,7 @@ paintToggle();
 
 /* ---------- Dot-wave background ----------
    A dot grid warped by a slow wave field. Dots grow and brighten on the crests and
-   fade in the troughs; colour runs violet → magenta like the brand gradient. */
+   fade in the troughs; colour runs between the two accent colours like the brand gradient. */
 (function(){
   const cv=$("#bg-dots"), ctx=cv&&cv.getContext("2d");
   if(!ctx) return;
@@ -678,7 +750,7 @@ paintToggle();
   const hex=v=>{v=v.trim().replace("#","");return [0,2,4].map(i=>parseInt(v.slice(i,i+2),16));};
   function readColors(){
     const s=getComputedStyle(document.documentElement);
-    const a=hex(s.getPropertyValue("--violet")),b=hex(s.getPropertyValue("--magenta")),p=hex(s.getPropertyValue("--page"));
+    const a=hex(s.getPropertyValue("--accent")),b=hex(s.getPropertyValue("--accent-2")),p=hex(s.getPropertyValue("--page"));
     dark=(p[0]*.299+p[1]*.587+p[2]*.114)<128;
     cols=[...Array(BUCKETS)].map((_,i)=>{const f=i/(BUCKETS-1);return `rgb(${a.map((c,j)=>Math.round(c+(b[j]-c)*f)).join(",")})`;});
   }
