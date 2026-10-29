@@ -411,7 +411,7 @@ const range=(a,b)=>a===b?(lang==="en"?`VND ${money(a)}`:`${money(a)} ₫`):(lang
    ENDPOINT: paste the Apps Script /exec URL after deploying. Empty = logging off.
    LOG_MODE: "all" = record every answer (pilot / acceptance);
              "email_only" = record answers only when the user leaves an email. */
-const CONFIG={ENDPOINT:"",LOG_MODE:"all"};
+const CONFIG={ENDPOINT:"https://script.google.com/macros/s/AKfycbxawh8kl9QRxiemDGulah28zY7qbyek9S_j4I7WsjvHjA7k-lezYE_D8M4DbdJ72Bq4PQ/exec",LOG_MODE:"all"};
 const newId=()=>(window.crypto&&crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2));
 let SID=newId();
 const enL=(g,id)=>{const o=O[g].find(x=>x[0]===id);return o?o[1]:"";};
