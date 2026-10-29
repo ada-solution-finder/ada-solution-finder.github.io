@@ -152,8 +152,19 @@ footer.site a{color:var(--violet);font-weight:600}
   .others li{grid-template-columns:1fr 50px}
   .others .bar{grid-column:1 / -1;order:3}
 }
+/* Intro rings: rotation lives in CSS so the draw-in animation can spin them into place */
+.intro-visual .arc{transform-box:view-box;transform-origin:100px 100px;transform:rotate(-90deg)}
+.intro-visual .arc-a{--len:420}
+.intro-visual .arc-b{--len:230}
+@keyframes arc-draw{
+  0%{stroke-dashoffset:var(--len);transform:rotate(-300deg);opacity:0}
+  12%{opacity:1}
+  100%{stroke-dashoffset:0;transform:rotate(-90deg);opacity:1}
+}
 @media (prefers-reduced-motion:no-preference){
   .ring circle.val{transition:stroke-dashoffset 900ms cubic-bezier(.2,.8,.2,1)}
+  .intro-visual .arc{animation:arc-draw 1.8s cubic-bezier(.22,1,.36,1) both}
+  .intro-visual .arc-b{animation-delay:.18s;animation-duration:1.6s}
 }
 </style>
 </head>
@@ -327,8 +338,8 @@ function render(){
         <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="none" stroke="var(--line)" stroke-width="2"/>
         <circle cx="100" cy="100" r="64" fill="none" stroke="var(--line)" stroke-width="2"/>
         <circle cx="100" cy="100" r="36" fill="var(--chip)"/>
-        <circle cx="100" cy="100" r="92" fill="none" stroke="var(--violet)" stroke-width="8" stroke-linecap="round" stroke-dasharray="420 600" transform="rotate(-90 100 100)"/>
-        <circle cx="100" cy="100" r="64" fill="none" stroke="var(--magenta)" stroke-width="8" stroke-linecap="round" stroke-dasharray="230 500" transform="rotate(-90 100 100)"/>
+        <circle class="arc arc-a" cx="100" cy="100" r="92" fill="none" stroke="var(--violet)" stroke-width="8" stroke-linecap="round" stroke-dasharray="420 600"/>
+        <circle class="arc arc-b" cx="100" cy="100" r="64" fill="none" stroke="var(--magenta)" stroke-width="8" stroke-linecap="round" stroke-dasharray="230 500"/>
         <text x="100" y="108" text-anchor="middle" font-family="var(--font)" font-weight="700" font-size="24" fill="var(--ink)">P1–P4</text></svg>
       </div></section>`;
   }
