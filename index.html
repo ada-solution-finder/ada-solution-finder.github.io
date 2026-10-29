@@ -230,7 +230,16 @@ details.alc .sub{margin:0}
 
 /* Done */
 .done{text-align:center;padding:24px 0}
-.done .mark{width:84px;height:84px;margin:0 auto 18px;border-radius:50%;background:var(--chip);display:grid;place-items:center;color:var(--ok)}
+.done .mark{position:relative;width:84px;height:84px;margin:0 auto 18px;border-radius:50%;background:var(--chip);display:grid;place-items:center;color:var(--ok)}
+/* Done tick: the circle pops in, the tick draws itself, then one soft ring fades out */
+@keyframes mark-pop{from{transform:scale(.4);opacity:0}}
+@keyframes tick-draw{to{stroke-dashoffset:0}}
+@keyframes mark-ring{from{transform:scale(1);opacity:.6}to{transform:scale(1.6);opacity:0}}
+@media (prefers-reduced-motion:no-preference){
+  .done .mark{animation:mark-pop .45s cubic-bezier(.2,1.5,.4,1) both}
+  .done .mark path{stroke-dasharray:1;stroke-dashoffset:1;animation:tick-draw .45s ease-out .35s forwards}
+  .done .mark::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--ok);opacity:0;animation:mark-ring .9s ease-out .7s}
+}
 .done h1{margin:0 auto 10px}
 .done p{color:var(--muted);max-width:50ch;margin:0 auto 26px}
 
@@ -649,7 +658,7 @@ function render(){
       <div class="actions"><button class="btn ghost" data-go="results">${t("back")}</button><button class="btn primary" data-next="consult">${t("finish")}</button></div></section>`;
   }
   else if(screen==="done"){
-    h=`<section class="panel done"><div class="mark"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    h=`<section class="panel done"><div class="mark"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="1"/></svg></div>
       <h1>${A.wants?t("doneYesH"):t("doneH")}</h1><p>${A.wants?T[lang].doneYes(esc(A.email),`${fmtDay(A.callDate)}, ${A.callTime}`):t("doneNo")}</p>
       <div class="links"><button class="btn primary" data-reset="1">${t("home")}</button><a class="btn ghost" href="https://adaglobal.com/" target="_blank" rel="noopener">${t("visit")}</a></div></section>`;
   }
